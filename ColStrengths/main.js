@@ -3,8 +3,10 @@ var Fy = 50.;
 var G = 11200;
 
 $(document).ready(function() {
-    $('#columnBtn').on("click", getStrengths);
-    });
+    $('#theButton').on("click", getStrengths);
+    //event listener for the start over button
+	$('#startAgainBtn').on('click', startOver);
+ });
 
 function getStrengths() {
     //First get the column size
@@ -36,9 +38,8 @@ function getStrengths() {
 var FBLimitState = phiPn_FlexuralBuckling(Lcx, Lcy, column.A, column.rx, column.ry,);
 var TBLimitState = phiPn_TorsionalBuckling(column.A, column.Ix, column.Iy, column.Cw, Lcz, column.J);
 var LBLimitState = phiPn_LocalBuckling(Lcx, Lcy, column.A, column.bf2tf, column.htw, column.tw, column.rx, column.ry, column.bf, column.d, column.tf);
-console.log(FBLimitState);
-console.log(TBLimitState);
-displayTable(FBLimitState, TBLimitState, LBLimitState);
+var CAFTBLimitState = phiPn_CAFTB(column.A, column.Cw, column.Iy, column.d, column.rx, column.ry, column.J, Lcz);
+displayTable(FBLimitState, TBLimitState, LBLimitState, CAFTBLimitState);
 }
 
     
@@ -59,7 +60,6 @@ function phiPn_FlexuralBuckling(KLx, KLy, A, rx, ry)
     else {
         Fcr = 0.877 * Fe;
     }
-     
      var phiPnFB = parseInt(0.9*Fcr*A);
      return phiPnFB;
 
@@ -71,6 +71,7 @@ function phiPn_LocalBuckling(KLx, KLy, A, bf2tf, htw, tw, rx, ry, bf, d, tf) {
     var Ae = A;
     var lambdarFlange = 0.56*Math.sqrt(E / Fy)
     var lambdarWeb = 1.49*Math.sqrt(E / Fy)
+    console.log(lambdarFlange, lambdarWeb);
 
     //calculate Fe
     var Fex = Math.pow(3.14159, 2) * E/Math.pow(KLx * 12. / rx, 2);
@@ -116,7 +117,7 @@ function phiPn_LocalBuckling(KLx, KLy, A, bf2tf, htw, tw, rx, ry, bf, d, tf) {
         var he = h*(1-c1*Math.sqrt(Fel/Fcr))*Math.sqrt(Fel/Fcr);
         Ae = he*tw+2*bf*be;
      }
-     console.log(htw, bf2tf, lambdarWeb*Math.sqrt(Fy/Fcr), lambdarFlange*Math.sqrt(Fy/Fcr));
+   
      if (htw < lambdarWeb*Math.sqrt(Fy/Fcr) && bf2tf < lambdarFlange*Math.sqrt(Fy/Fcr)) {
         var phiPnLB = "N/A";
      }
@@ -141,17 +142,37 @@ function phiPn_TorsionalBuckling(A, Ix, Iy, Cw, Lcz, J) {
     return phiPnTB;
 }
 
-function displayTable(FB, TB, LB) {
+function phiPn_CAFTB(A, Cw, Iy, d, rx, ry, J, Lcz) {
+	var temp_num = Cw+Iy*Math.pow(0.5*d, 2);
+	var temp_denom = A*(Math.pow(rx, 2)+Math.pow(ry, 2)+Math.pow(0.5*d, 2));
+	var Fe = 0.9*(G*J+(E*Math.pow(3.14159265, 2)*temp_num/Math.pow(Lcz*12, 2)))*(1/temp_denom);
+	var Fcr;
+    if (Fy/Fe < 2.25) {
+        Fcr = Fy * Math.pow(0.658, (Fy/Fe))
+    }
+    else {
+        Fcr = 0.877 * Fe;
+    }
+    var phiPnCAFTB = parseInt(0.9*Fcr*A);
+    return phiPnCAFTB;
+
+}
+
+
+function displayTable(FB, TB, LB, CAFTB) {
     //$('#checks').empty();
     var source = $("#colStrengths").html();
     var template = Handlebars.compile(source);
-    var data = {showFB: FB,
+    var data = {
+    	showFB: FB,
         showTB: TB,
-        showLB: LB
+        showLB: LB,
+        showCAFTB: CAFTB
          };
     var newTable = template(data);
     $('#checks').html(newTable);
-    //$('#theButton').hide();
+    $('#theButton').hide();
+    $('#startAgainBtn').show();
 
     //OLD CODE FROM ATTEMPTING TO SEPARATE TEMPLATE
     //$('#startAgainBtn').show();
@@ -161,5 +182,12 @@ function displayTable(FB, TB, LB) {
 
 };
     
+//
+// FUNCTION TO RELOAD THE PAGE ON CLICK
+//
+
+function startOver() {
+	location.reload();
+}
 
 

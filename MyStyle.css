@@ -37,6 +37,10 @@ h2 {
 	padding-top: 44px;
 }
 
+/*.input-xs {
+	height: 25px;
+	line-height: 25px;
+}*/
 
 
 #startAgainBtn {
@@ -64,6 +68,10 @@ h2 {
 
 .navList {
 	text-align: left;
+}
+
+#testTable tr {
+	min-height: 30px;
 }
 
 /*

@@ -34,32 +34,9 @@ function getWasher() {
 	var grade = $("#boltGrade").val();
 	var type = $('#jointType').val();
 
-console.log(5);
-console.log(size, hole, plateFy, grade, type);
-//displayTable();
-
 
 //end of getWasher
 }
-
-
-function displayTable() {
-	var source = $("#limit-states").html();
-	var template = Handlebars.compile(source);
-	var data = {LSBoltBeamSide: phiPnBoltBeamSide, 
-		slipCritStrength: phiPnSC, 
-		shearYieldBeam: phiPnBeamYield,
-		shearRuptBeam: phiPnBeamRupt,
-		blockShearBeam: phiPnBSBeam,
-		shearYieldAngles: phiPnAngleYield,
-		shearRuptAngles: phiPnAngleRupt,
-		blockShearAngles: phiPnBSAngle
-		 };
-	var newTable = template(data);
-	$('#checks').html(newTable);
-	$('#theButton').hide();
-	$('#startAgainBtn').show();
-};
 
 //
 // FUNCTION TO RELOAD THE PAGE ON CLICK
