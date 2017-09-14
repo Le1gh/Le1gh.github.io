@@ -400,12 +400,13 @@ var Lc_min = Math.min(Lc_angle_top, Lc_angle_bot);
 	oneBoltAngleTearoutCenter = Math.round(oneBoltAngleTearoutCenter, 1);
 	oneBoltAngleTearoutEdge= Math.round(oneBoltAngleTearoutEdge, 1);
 //
-//COMBINE BOLT SHEAR, BEARING, AND TEAROUT ON BEAM SIDE
+//COMBINE BOLT SHEAR, BEARING, AND TEAROUT ON BEAM  OR ON ANGLE
 //
 var edgeBoltBeamSide = Math.min(oneBoltBS, oneBoltBeamBearing, oneBoltAngleBearing, oneBoltBeamTearoutEdge, oneBoltAngleTearoutEdge);
 var typBoltBeamSide = Math.min(oneBoltBS, oneBoltBeamBearing, oneBoltAngleBearing, oneBoltBeamTearoutCenter, oneBoltAngleTearoutCenter);
 phiPnBoltBeamSide = Math.round(edgeBoltBeamSide + (bolt.n-1)*typBoltBeamSide, 1);
-	
+
+
 //
 //SHEAR YIELDING ON BEAM
 //
@@ -479,8 +480,8 @@ function drawFig(angle, beam, bolt) {
 	var angleLength = (bolt.n-1)*bolt.s + angle.Lev_top+angle.Lev_bot;
 	var r = beam.tw;	
 	var c = document.getElementById("myCanvas");
-	c.width = Math.max(beam.bf*1.2*7, angle.b*1.2*7);
-	c.height = Math.max(beam.d*1.2*7, angle.b*1.2*7);
+	c.width = Math.max(beam.bf*7*2, angle.b*7*2);
+	c.height = Math.max(beam.d*7*2, angle.b*7*2);
 	var ctx = c.getContext("2d");
 	ctx.scale(7,7);
 	ctx.translate(1,1);
