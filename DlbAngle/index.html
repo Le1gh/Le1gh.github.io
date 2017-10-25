@@ -8,14 +8,14 @@
 
 
 <body>
-<!--
+
  <nav class = "pageNav">
 <ul class="navList">
       <li class = "navLi">
         <a href="../index.html"><span class = "navLi">Home</span></a>
       
  
- </nav>-->
+ </nav>
 <h1>Bolted / Bolted Double Angle Connections</h1>
 
 <div class = "container">
@@ -395,36 +395,37 @@
     <script id="limit-states" type="text/x-handlebars-template">
       <h2>Design Strengths by Limit State (lrfd)</h2>
       <table class = "table table-hover table-bordered table-condensed table-striped">
-         <tr>
-        <td>Bolt Strength (min. bolt shear/bearing/tearout)</td>
-        <td>{{LSBoltBeamSide}}</td>
+        <tr style ="height: 40px;">
+        	<td>Bolt Strength (min. bolt shear/bearing/tearout)</td>
+        	<td>{{LSBoltBeamSide}}</td>
         </tr>
-        <tr>
-        <td>Slip Critical Strength</td>
-        <td>{{slipCritStrength}}</td>
+        <tr style ="height: 40px;">
+        	<td>Slip Critical Strength</td>
+        	<td>{{slipCritStrength}}</td>
         </tr> 
-        <tr>
-        <td>Shear Yielding on Beam Web</td>
-        <td>{{shearYieldBeam}}</td>
+        <tr style ="height: 40px;">
+        	<td>Shear Yielding on Beam Web</td>
+        	<td>{{shearYieldBeam}}</td>
         </tr> 
-         <tr>
-        <td>Shear Rupture on Beam Web</td>
-        <td>{{shearRuptBeam}}</td>
+         <tr style ="height: 40px;">
+        	<td>Shear Rupture on Beam Web</td>
+        	<td>{{shearRuptBeam}}</td>
         </tr>
-        <tr>
-        <td>Block Shear on Beam Web</td>
-        <td>{{blockShearBeam}}</td>
+        <tr style ="height: 40px;">
+        	<td>Block Shear on Beam Web</td>
+       	 	<td>{{blockShearBeam}}</td>
         </tr>
-         <tr>
-        <td>Shear Yielding on Angles</td>
-        <td>{{shearYieldAngles}}</td>
+         <tr style ="height: 40px;">
+       	 <td>Shear Yielding on Angles</td>
+        	<td>{{shearYieldAngles}}</td>
         </tr> 
-         <tr>
-        <td>Shear Rupture on Angles</td>
-        <td>{{shearRuptAngles}}</td>
-        </tr> <tr>
-        <td>Block Shear on Angles</td>
-        <td>{{blockShearAngles}}</td>
+         <tr style ="height: 40px;">
+        	<td>Shear Rupture on Angles</td>
+        	<td>{{shearRuptAngles}}</td>
+        </tr> 
+        <tr style ="height: 40px;">
+        	<td>Block Shear on Angles</td>
+        	<td>{{blockShearAngles}}</td>
         </tr>
       </table>
     </script>

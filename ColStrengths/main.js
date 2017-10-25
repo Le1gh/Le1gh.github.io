@@ -9,7 +9,7 @@ $(document).ready(function() {
  });
 
 function getStrengths() {
-    //First get the column size
+    // get the column size
     var Lcx = parseFloat($('#colKLx').val());
     var Lcy = parseFloat($('#colKLy').val());
     var Lcz = parseFloat($('#colKLz').val());
@@ -173,12 +173,6 @@ function displayTable(FB, TB, LB, CAFTB) {
     $('#checks').html(newTable);
     $('#theButton').hide();
     $('#startAgainBtn').show();
-
-    //OLD CODE FROM ATTEMPTING TO SEPARATE TEMPLATE
-    //$('#startAgainBtn').show();
-    /*var template = Handlebars.getTemplate('strengths');
-    var data = {showFB: FB};       
-    $('#checks').append(template(data))*/
 
 };
     

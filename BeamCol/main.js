@@ -8,7 +8,6 @@ function phiPn(KLx, KLy, A, bf2tf, htw, tw, rx, ry, bf, d, tf, kdet)
 {
     var E = 29000.;
     var Fy = 50.;
-    var Qs;
     var Fcr;
     var Fe;
    	var Ae = A;
@@ -102,8 +101,7 @@ function phiMn(L, Cb, Z, S, rts, J, h0, ry, Iy, bf2tf, htw)
 	if(bf2tf > lambdap && bf2tf < lambdar)
     {
         MnFLB = Mp - (Mp - 0.7 * Fy * S) * (bf2tf - lambdap) / (lambdar - lambdap);
-		//Mpprime = Mp-(Mp-0.7*Fy*S)*(bf2tf-lambdap)/(lambdar-lambdap);
-		//Lpprime = Lp+(Lr-Lp);
+		
 	}
     else if(bf2tf > lambdar)
     {
@@ -122,7 +120,6 @@ function getMnPn(L, KLx, KLy, Cb)
 {
     var mnpn = [];
     for(var i = 0; i < Wshapes.length; i++) {
-       // r = Wshapes[shape];
         var shape = Wshapes[i];   
         var pn = phiPn(KLx, KLy, shape.A, shape.bf2tf, shape.htw, shape.tw, shape.rx, shape.ry, shape.bf, shape.d, shape.tf, shape.kdet);
         var rts = Math.sqrt(Math.sqrt(shape.Iy*shape.Cw)/shape.Sx);
@@ -138,8 +135,7 @@ function getMnPn(L, KLx, KLy, Cb)
         }
        
     }
-     console.log(mnpn);
-     return mnpn;
+      return mnpn;
  }
 
 function getShape(Pu, Mu, maxDepth, mnpn) {
@@ -179,20 +175,13 @@ function showMnPn() {
  var L=parseInt($('#flexL').val());
  var KLx=parseInt($("#colKLx").val());
  var KLy=parseInt($("#colKLy").val());
-var Cb=parseInt($("#Cb").val());
-var Pu=parseInt($("#Pu").val());
-var Mu=parseInt($("#Mu").val());
-var maxDepth=parseInt($("#maximumDepth").val());
- //var Cb=parseInt(document.forms["beamShapeSelector"]["Cb"].value);
- //var Pu=parseInt(document.forms["beamShapeSelector"]["Pu"].value);
- //var Mu=parseInt(document.forms["beamShapeSelector"]["Mu"].value);
- //var maxDepth=parseInt(document.forms["beamShapeSelector"]["MaxDepth"].value);
+ var Cb=parseInt($("#Cb").val());
+ var Pu=parseInt($("#Pu").val());
+ var Mu=parseInt($("#Mu").val());
+ var maxDepth=parseInt($("#maximumDepth").val());
+ var mnpn = getMnPn(L, KLx, KLy, Cb);
+ var theAnswer = getShape(Pu, Mu, maxDepth, mnpn);
+ $('#result').html(theAnswer);
  
-mnpn = getMnPn(L, KLx, KLy, Cb);
-var theAnswer = getShape(Pu, Mu, maxDepth, mnpn);
-console.log(L, KLx, KLy, Cb, Pu, Mu, maxDepth);
-$('#result').html(theAnswer);
- 
- //$("#result").innerHTML=getShape(Pu, Mu, maxDepth, mnpn);
  }
 

@@ -70,7 +70,6 @@ $('#beamCopeForm').one('change', function() {
 //event listener to ask for additional user input only if SC bolts
 $('#jointTypeForm').one('change', function() {
 	var jointType = $('#jointType').val();	
-	console.log(jointType);
 	if (jointType === "SCA" || jointType === "SCB") {
 		var mytable = document.getElementById('inputTable');
 		var row = mytable.insertRow(7);
@@ -314,7 +313,7 @@ phiPnBS = Math.round(phiPnBS, 1);
 					Tb = 0;
 			}
 	}
-	console.log(bolt.type);
+
 	if (bolt.type === "noSC") {
 		phiPnSC = "N/A";
 	} else if (bolt.hole === "STD" || bolt.hole === "SSLT") {
