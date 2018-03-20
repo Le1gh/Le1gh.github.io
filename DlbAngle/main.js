@@ -87,7 +87,7 @@ function getProps() {
 
 var beamSize= $('#beamSize').val();
 var angleSize= $('#angleSize').val();
-
+var colSize = $('#colSize').val();
 
 
 //Wshapes is a large array of objects in a separate Wshapes.js file

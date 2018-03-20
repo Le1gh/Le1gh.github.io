@@ -52,15 +52,12 @@ h2 {
 .pageNav {
 	background-color: #999999;
 	font-color: white;
-	/*position: absolute;*/
-	/*top: 0;*/
 	width: 100%;
-	padding: 7px;
+	line-height: 20px;
 }
 
 .navLi {
 	display: inline;
-	padding-right: 5%;
 	color: #ffffff;
 	font-variant: small-caps;
 	font-size: 20px;
@@ -68,6 +65,7 @@ h2 {
 
 .navList {
 	text-align: left;
+	line-height: 30px;
 }
 
 #testTable tr {
