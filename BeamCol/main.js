@@ -64,7 +64,6 @@ function phiPn(KLx, KLy, A, bf2tf, htw, tw, rx, ry, bf, d, tf, kdet)
 
 }
 
-
 function phiMn(L, Cb, Z, S, rts, J, h0, ry, Iy, bf2tf, htw)
 {
     var E = 29000.;
@@ -133,10 +132,9 @@ function getMnPn(L, KLx, KLy, Cb)
             "phiPn": pn,
             "depthSeries": parseInt(shape["Size"].slice(1).split("X")[0])
         }
-       
     }
       return mnpn;
- }
+}
 
 function getShape(Pu, Mu, maxDepth, mnpn) {
    
@@ -182,6 +180,7 @@ function showMnPn() {
  var mnpn = getMnPn(L, KLx, KLy, Cb);
  var theAnswer = getShape(Pu, Mu, maxDepth, mnpn);
  $('#result').html(theAnswer);
- 
- }
+ var ourShape = mnpn.findIndex(x => x.size==theAnswer); 
+  $('#phiMn').html(ourShape);
+  }
 
