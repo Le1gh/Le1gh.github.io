@@ -181,9 +181,9 @@ function showMnPn() {
  var theAnswer = getShape(Pu, Mu, maxDepth, mnpn);
  $('#result').html(theAnswer);
  var thisShapesIndex = mnpn.findIndex(x => x.size==theAnswer); 
- $('#phiMn').html(mnpn[thisShapesIndex].phiMn);
- $('#phiPn').html(mnpn[thisShapesIndex].phiPn);
- var DCR = Pu/mnpn[thisShapesIndex].phiPn;
+ $('#phiMn').html(Math.round(mnpn[thisShapesIndex].phiMn));
+ $('#phiPn').html(Math.round(mnpn[thisShapesIndex].phiPn));
+ var DCR = Math.round(100*Pu/mnpn[thisShapesIndex].phiPn)/100;
  $('#DCR').html(DCR);
   }
 
