@@ -180,7 +180,10 @@ function showMnPn() {
  var mnpn = getMnPn(L, KLx, KLy, Cb);
  var theAnswer = getShape(Pu, Mu, maxDepth, mnpn);
  $('#result').html(theAnswer);
- var ourShape = mnpn.findIndex(x => x.size==theAnswer); 
-  $('#phiMn').html(ourShape);
+ var thisShapesIndex = mnpn.findIndex(x => x.size==theAnswer); 
+ $('#phiMn').html(mnpn[thisShapesIndex].phiMn);
+ $('#phiPn').html(mnpn[thisShapesIndex].phiPn);
+ var DCR = Pu/mnpn[thisShapesIndex].phiPn;
+ $('#DCR').html(DCR);
   }
 
