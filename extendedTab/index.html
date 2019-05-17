@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
  <head>
- 	<title>Bolted/Bolted Double Angle Connections</title>
+ 	<title>Extended Shear Tab Connections</title>
  	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="../MyStyle.css">
  </head>
@@ -17,7 +17,7 @@
  </ul>  
  </nav>
 
-<h1>Bolted / Bolted Double Angle Connections</h1>
+<h1>Extended Shear Tab Connections</h1>
 
 <div class = "container">
 <div class = "row">
@@ -25,8 +25,9 @@
 <h2>User Inputs</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td>Rows of bolts</td>
+	<td>Rows of bolts (horizontal)</td>
 	<td><form><select id = "numBolts" class = "form-control input-sm">
+		<option value = 2 type = "number">2</option>
 		<option value = 3 type = "number">3</option>
 		<option value = 4 type = "number">4</option>
 		<option value = 5 type = "number">5</option>
@@ -39,6 +40,14 @@
 		<option value = 12 type = "number">12</option>
 		</select>
 	</form></td>
+</tr>
+<tr>
+	<td>Columns of bolts (vertical)</td>
+	<td><form><select id = "numBoltCols" class = "form-control input-sm">
+		<option value = 1 type = "number">1</option>
+		<option value = 2 type = "number">2</option>
+		<option value = 3 type = "number">3</option>
+		<option value = 4 type = "number">4</option
 </tr>
 <tr>
 	<td>Bolt diameter</td> 
@@ -100,41 +109,32 @@
 	</td>
 </tr>
 <tr>
-	<td>Interior Bolt Spacing</td>
-	<td><form><input id = "boltSpacing" class = "form-control input-sm" placeholder = 3.0 value = 3.0></form></td>
+	<td>Interior Horizontal Bolt Spacing</td>
+	<td><form><input id = "horizBoltSpacing" class = "form-control input-sm" placeholder = 3.0 value = 3.0></form></td>
 </tr>
 <tr>
-	<td>Angles - Top Edge Distance</td>
-	<td><form ><input id = "edgeDistAngleTop" class = "form-control input-sm" placeholder = 1.25 value =1.25></form></td>
+	<td>Interior Vertical Bolt Spacing</td>
+	<td><form><input id = "berticalBoltSpacing" class = "form-control input-sm" placeholder = 3.0 value = 3.0></form></td>
 </tr>
 <tr>
-	<td>Angles - Bottom Edge Distance</td>
-	<td><form ><input id = "edgeDistAngleBot" class = "form-control input-sm" placeholder = 1.25 value =1.25></form></td>
+	<td>Plate - Vertical Edge Distance</td>
+	<td><form ><input id = "edgeDistPlateVert" class = "form-control input-sm" placeholder = 1.25 value =1.25></form></td>
 </tr>
 <tr>
-	<td>Angles - Horizontal Edge Distance</td>
-	<td><form ><input id = "horizDistAngle" class = "form-control input-sm" placeholder = 1.25 value =1.25></form></td>
+	<td>Plate - Horizontal Edge Distance</td>
+	<td><form ><input id = "edgeDistPlateHoriz" class = "form-control input-sm" placeholder = 1.25 value =1.25></form></td>
 </tr>
 <tr>
-	<td>Beam Cope</td>
-	<td><form id = "beamCopeForm" class = "form-horizontal">
-		<select id = "beamCope" class = "form-control input-sm">
-		<option></option>
-		<option value = "toponly">Yes, top only</option>
-		<option value = "both">Yes, both top and bottom</option>
-		<option value = "no">No</option>
-		</select>
-		</form>
-	</td>
+	<td>Beam - Horizontal Edge Distance</td>
+	<td><form ><input id = "edgeDistPlateHoriz" class = "form-control input-sm" placeholder = 1.5 value =1.5></form></td>
 </tr>
 <tr>
-	<td>Angle Thickness</td>
-	<td><select id = "angleThickness" class = "form-control input-sm">
-<option value = 0.1875>3/16</option>
-<option value = 0.25>1/4</option>
-<option value = 0.3125>5/16</option>
+	<td>Plate Thickness</td>
+	<td><select id = "plateThickness" class = "form-control input-sm">
 <option value = 0.375>3/8</option>
 <option value = 0.4375>7/16</option>
+<option value = 0.5>1/2</option>
+<option value = 0.5>1/2</option>
 <option value = 0.5>1/2</option>
 	</select>
 	</td>

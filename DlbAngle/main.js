@@ -22,11 +22,12 @@ var bolt;
 
 $(document).ready(function() {
 
+
   //event listener for the button
-$("#theButton").on("click", getProps);
+$("#theButton").on('click', getProps);
 
 //event listener for the start over button
-$('#startAgainBtn').on('click', startOver);
+$("#startAgainBtn").on('click', startOver);
 
 //event listener to ask for additional user input only if beam is coped
 $('#beamCopeForm').one('change', function() {
@@ -99,6 +100,12 @@ for (var i = 0; i < Wshapes.length; i++) {
 			beamd = parseFloat(Wshapes[i].d);
 		}
 	}
+
+for (var i = 0; i < Wshapes.length; i++) {
+		if (colSize === Wshapes[i].Size) {
+			col_bf = parseFloat(Wshapes[i].bf);
+		}
+	}
 	
 //deal with beam cope geometry
 var Lev_top = parseFloat($('#copeEdgeDist_top').val());
@@ -148,6 +155,18 @@ bolt = {
 	grade: $("#boltGrade").val(),
 	type: $('#jointType').val()
 };
+
+column = {
+	Fy: 50,
+	Fu: 65,
+	tw: beamtw,
+	bf: beambf,
+	tf: beamtf,
+	d: beamd,
+	Lev_top: Lev_top,
+	Lev_bot:Lev_bot, 
+	Leh: Leh
+}
 
 var holeDia;
 	if (bolt.hole === "STD" && bolt.size < 1) {
@@ -591,6 +610,8 @@ function displayTable() {
 // FUNCTION TO RELOAD THE PAGE ON CLICK
 //
 
+
 function startOver() {
+	//$('#startAgainBtn').hide();
 	location.reload();
 }

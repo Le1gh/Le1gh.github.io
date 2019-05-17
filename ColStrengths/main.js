@@ -182,6 +182,7 @@ function displayTable(FB, TB, LB, CAFTB) {
 
 function startOver() {
 	location.reload();
+
 }
 
 
