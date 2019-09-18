@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", function(){
 //drawLineStyles();
 });
 
+/*
+$(document).ready(function() {
+  $('#theButton').on('click', getData);
+});
+*/
+
 function getData()
 {
   let gusset = 
@@ -35,8 +41,10 @@ function getData()
 
   let beamSize = document.getElementById('beamSize').value;
 
-  for (let i = 0; i < Wshapes.length; i++) {
-    if (beamSize === Wshapes[i].Size) {
+  for (let i = 0; i < Wshapes.length; i++) 
+  {
+    if (beamSize === Wshapes[i].Size) 
+    {
       beamtw = parseFloat(Wshapes[i].tw);
       beambf = parseFloat(Wshapes[i].bf);
       beamtf = parseFloat(Wshapes[i].tf);
@@ -162,16 +170,16 @@ function drawConnection(tBrace, cBrace, gusset, beam)
    {
       ctx.lineTo(offsetX+i, yStart + leftRxn - w_scaled*i - z_scaled*i);
       ctx.moveTo(offsetX+i, yStart + leftRxn - w_scaled*i - z_scaled*i);
-    }
+   }
     ctx.moveTo(offsetX+gusset.length, yStart - rightRxn);
     
-    for (i = gusset.length; i >= gusset.length/2; i-= intervalX)
-    {
+  for (i = gusset.length; i >= gusset.length/2; i-= intervalX)
+   {
       //w_scaled*gusset.length + w_scaled*i);
       let x = gusset.length - i;
       ctx.lineTo(offsetX+gusset.length - x, yStart - rightRxn - w_scaled*x + z_scaled*x);
       ctx.moveTo(offsetX+gusset.length - x, yStart - rightRxn - w_scaled*x + z_scaled*x);
-    }
+   }
   
   ctx.moveTo(offsetX+gusset.length, yStart-rightRxn);
   ctx.lineTo(2*offsetX+gusset.length, yStart-rightRxn)
@@ -267,7 +275,7 @@ function drawConnection(tBrace, cBrace, gusset, beam)
 
 
       //DRAW BEAM
-      let beamStart = yMomentStart + Math.abs(Mmax/scaleFactorMoment) + 10;
+      let beamStart = yMomentStart + Math.abs(endMoment) + 15;
     ctx.lineWidth=0.15;
     ctx.strokeStyle = 'black';
      ctx.beginPath();
@@ -319,7 +327,7 @@ function drawConnection(tBrace, cBrace, gusset, beam)
    ctx.stroke();
 
    displayTable(Vmax, Mmax);
-}
+};
 
 function displayTable(V, M) {
     //$('#checks').empty();
