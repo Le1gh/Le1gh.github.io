@@ -7,111 +7,46 @@
 	<link rel="stylesheet" type="text/css" href="../MyStyle.css">
   <script type = "text/javascript" src="main.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type = "text/javascript"> 
-    google.charts.load('current', {packages: ['corechart', 'line']});
+  <!--<script type = "text/javascript"> 
+    //google.charts.load('current', {packages: ['corechart', 'line']});
     //google.charts.setOnLoadCallback(drawLineStyles);
     //google.charts.setOnLoadCallback(drawLineStyles2);
   </script>
+-->
 </head>
 
 
 <body>
 
-<nav class = "pageNav">
-<ul class="navList">
-      <li class = "navLi">
-        <a href="../index.html"><span class = "navLi">Home</span></a>
-      </li>
-</ul>
-</nav>
-
-<h1></h1>
-
-
 <div class = "container">
 <div class = "row">
 
-<div class = "col-md-4">
-<h2>Beam Data</h2>
+<div class = "col-md-3">
+
+<h2>Story Data</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td>Beam Length (ft):</td>
+	<td width ="150">Beam Length (ft): </td>
 	<td><input class="form-control input-sm" id = "beamLength"></td>
 </tr>
 <tr>
-	<td>Beam Size</td>
+	<td width ="150">Left Column Centerline to Chevron Connection (ft): </td>
+	<td><input class="form-control input-sm" id = "a"></td>
+</tr>
+<tr>
+	<td width ="150">Story Height (ft): </td>
+	<td><input class="form-control input-sm" id = "storyHeight"></td>
+</tr>
+<!--
+<tr>
+	<td width ="220">Beam End to Gusset Start (ft): </td>
+	<td><input class="form-control input-sm" placeholder = 12 id = "a"></td>
+</tr>
+-->
+<tr>
+	<td width ="150">Beam Size</td>
 	<td><select id = "beamSize" class = "form-control input-sm">
-<option>W36X925</option>
-<option>W36X853</option>
-<option>W36X802</option>
-<option>W36X723</option>
-<option>W36X652</option>
-<option>W36X529</option>
-<option>W36X487</option>
-<option>W36X441</option>
-<option>W36X395</option>
-<option>W36X361</option>
-<option>W36X330</option>
-<option>W36X302</option>
-<option>W36X282</option>
-<option>W36X262</option>
-<option>W36X247</option>
-<option>W36X231</option>
-<option>W36X256</option>
-<option>W36X232</option>
-<option>W36X210</option>
-<option>W36X194</option>
-<option>W36X182</option>
-<option>W36X170</option>
-<option>W36X160</option>
-<option>W36X150</option>
-<option>W36X135</option>
-<option>W33X387</option>
-<option>W33X354</option>
-<option>W33X318</option>
-<option>W33X291</option>
-<option>W33X263</option>
-<option>W33X241</option>
-<option>W33X221</option>
-<option>W33X201</option>
-<option>W33X169</option>
-<option>W33X152</option>
-<option>W33X141</option>
-<option>W33X130</option>
-<option>W33X118</option>
-<option>W30X391</option>
-<option>W30X357</option>
-<option>W30X326</option>
-<option>W30X292</option>
-<option>W30X261</option>
-<option>W30X235</option>
-<option>W30X211</option>
-<option>W30X191</option>
-<option>W30X173</option>
-<option>W30X148</option>
-<option>W30X132</option>
-<option>W30X124</option>
-<option>W30X116</option>
-<option>W30X108</option>
-<option>W30X99</option>
-<option>W30X90</option>
-<option>W27X539</option>
-<option>W27X368</option>
-<option>W27X336</option>
-<option>W27X307</option>
-<option>W27X281</option>
-<option>W27X258</option>
-<option>W27X235</option>
-<option>W27X217</option>
-<option>W27X194</option>
-<option>W27X178</option>
-<option>W27X161</option>
-<option>W27X146</option>
-<option>W27X129</option>
-<option>W27X114</option>
-<option>W27X102</option>
-<option>W27X94</option>
-<option>W27X84</option>
+<option>W14X176</option>
 <option>W24X370</option>
 <option>W24X335</option>
 <option>W24X306</option>
@@ -206,7 +141,7 @@
 <option>W14X233</option>
 <option>W14X211</option>
 <option>W14X193</option>
-<option>W14X176</option>
+
 <option>W14X159</option>
 <option>W14X145</option>
 <option>W14X132</option>
@@ -255,6 +190,77 @@
 <option>W12X19</option>
 <option>W12X16</option>
 <option>W12X14</option>
+<option>W36X925</option>
+<option>W36X853</option>
+<option>W36X802</option>
+<option>W36X723</option>
+<option>W36X652</option>
+<option>W36X529</option>
+<option>W36X487</option>
+<option>W36X441</option>
+<option>W36X395</option>
+<option>W36X361</option>
+<option>W36X330</option>
+<option>W36X302</option>
+<option>W36X282</option>
+<option>W36X262</option>
+<option>W36X247</option>
+<option>W36X231</option>
+<option>W36X256</option>
+<option>W36X232</option>
+<option>W36X210</option>
+<option>W36X194</option>
+<option>W36X182</option>
+<option>W36X170</option>
+<option>W36X160</option>
+<option>W36X150</option>
+<option>W36X135</option>
+<option>W33X387</option>
+<option>W33X354</option>
+<option>W33X318</option>
+<option>W33X291</option>
+<option>W33X263</option>
+<option>W33X241</option>
+<option>W33X221</option>
+<option>W33X201</option>
+<option>W33X169</option>
+<option>W33X152</option>
+<option>W33X141</option>
+<option>W33X130</option>
+<option>W33X118</option>
+<option>W30X391</option>
+<option>W30X357</option>
+<option>W30X326</option>
+<option>W30X292</option>
+<option>W30X261</option>
+<option>W30X235</option>
+<option>W30X211</option>
+<option>W30X191</option>
+<option>W30X173</option>
+<option>W30X148</option>
+<option>W30X132</option>
+<option>W30X124</option>
+<option>W30X116</option>
+<option>W30X108</option>
+<option>W30X99</option>
+<option>W30X90</option>
+<option>W27X539</option>
+<option>W27X368</option>
+<option>W27X336</option>
+<option>W27X307</option>
+<option>W27X281</option>
+<option>W27X258</option>
+<option>W27X235</option>
+<option>W27X217</option>
+<option>W27X194</option>
+<option>W27X178</option>
+<option>W27X161</option>
+<option>W27X146</option>
+<option>W27X129</option>
+<option>W27X114</option>
+<option>W27X102</option>
+<option>W27X94</option>
+<option>W27X84</option>
 	</select>
 	</td>
 </tr>
@@ -264,8 +270,8 @@
 <h2>Gusset Data</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td>Gusset Length (in.):</td>
-	<td><input class="form-control input-sm" id = "gussetLength"></td>
+	<td width ="150">Gusset Length (in.):</td>
+	<td><input required class="form-control input-sm" id = "gussetLength" ></td>
 </tr>
 <tr>
 	<td>Gusset height (in.):</td>
@@ -273,23 +279,19 @@
 </tr>
 <tr>
 	<td>Gusset thickness (in.):</td>
-	<td><input class="form-control input-sm" id = "gussetThickness"></td>
+	<td><input class="form-control input-sm" id = "gussetThickness"> </td>
 </tr>
 </table>
 
 <h2>Force Data</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td>Force in Tension Brace (kips):</td>
+	<td width ="150">Force in Tension Brace (kips):</td>
 	<td><input class="form-control input-sm" id = "tensionForce"></td>
 </tr>
 <tr>
 	<td>Force in Compression Brace (kips):</td>
 	<td><input class="form-control input-sm" id = "compressionForce"></td>
-</tr>
-<tr>
-	<td>Brace angle (rel. to horizontal) (degrees):</td>
-	<td><input class="form-control input-sm" id = "braceAngle"></td>
 </tr>
 </table>
 
@@ -298,14 +300,29 @@
 <button class = "btn" id="theButton">Calculate Chevron Effect</button>
 </div>
 
-<div class = "col-md-7">
+<div class = "col-md-6">
 <canvas id="myCanvas"></canvas>
-<!--<div id = "chart_div" style="width: 900px; height: 300px"></div>-->
+<!--<div id = "chart_div"></div>-->
 </div>
+
+<div class = "col-md-3" id="checks">
+    <script id="shearsMoments" type="text/x-handlebars-template">
+      <h2>Shear and Moment Values</h2>
+      <table class = "table table-hover table-bordered table-condensed table-striped testTable">
+        <tr style ="height: 40px;">
+        	<td>Max Shear (kips) </td>
+        	<td>{{maxShear}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+        	<td>Max Moment (kip-ft)</td>
+        	<td>{{maxMoment}}</td>
+        </tr>
+     </table>
+     </script>
 </div>
 </div>
 
-
+</div>
 
 
 <!--<script src = "https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.amd.js"></script>-->
