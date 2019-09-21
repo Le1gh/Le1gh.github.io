@@ -1,15 +1,14 @@
-/*document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function(){
   // Handler when the DOM is fully loaded
   document.getElementById("theButton").addEventListener("click", getInitialInputs);
-  // Handler when all assets (including images) are loaded
-//drawLineStyles();
-});
-*/
 
+});
+
+/*
 $(document).ready(function() {
   $('#theButton').on('click', getInitialInputs);
 });
-
+*/
 
 function getInitialInputs()
 {
@@ -79,7 +78,7 @@ function getInitialInputs()
 function concentratedStress(tBrace, cBrace, gusset, beam)
 {
   console.log("nothing here yet");
-  displayTableConcentratedForces(999, 888);
+  displayTableConcentratedForces(0, 0);
 
   let b = beam.length - beam.a;
   let CBraceLength = Math.sqrt(Math.pow(beam.a, 2) + Math.pow(beam.storyHeight, 2));
@@ -91,7 +90,7 @@ function concentratedStress(tBrace, cBrace, gusset, beam)
   let tanCompAngle = beam.storyHeight/beam.a;
   let tanTensAngle = beam.storyHeight/b;
   let Fy = 50;
-  let V1 = tBrace.tensionForce *cosTenAngle + cBrace.compressionForce*cosCompAngle;
+  let V1 = tBrace.tensionForce *cosTensAngle + cBrace.compressionForce*cosCompAngle;
   let moment = (tBrace.tensionForce*cosTensAngle + cBrace.compressionForce*cosCompAngle)*beam.d/2;
   let unbalancedVert = tBrace.tensionForce*sinTensAngle - cBrace.compressionForce*sinCompAngle;
   let denom = Math.pow(0.9*Fy*gusset.thickness, 2) - Math.pow(V1/(0.6*gusset.length), 2);
