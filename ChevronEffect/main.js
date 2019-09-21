@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
   // Handler when the DOM is fully loaded
-  document.getElementById("theButton").addEventListener("click", getInitialInputs);
+  document.getElementById("theButton").addEventListener("click", getInitialInputs());
   // Handler when all assets (including images) are loaded
 //drawLineStyles();
 });
@@ -14,6 +14,7 @@ $(document).ready(function() {
 function getInitialInputs()
 {
   let stressDist = document.getElementById('stressModel').value;
+  console.log("here i am!");
   console.log(stressDist);
   let gusset = 
   {
@@ -64,6 +65,7 @@ function getInitialInputs()
     a : parseFloat(document.getElementById('a').value),
   }
 
+  console.log(stressDist);
   if (stressDist == "uniformStressModel")
   {
     uniformStress(tensionBrace, compressionBrace, gusset, beam);
