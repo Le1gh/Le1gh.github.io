@@ -1,15 +1,15 @@
-document.addEventListener("DOMContentLoaded", function(){
+/*document.addEventListener("DOMContentLoaded", function(){
   // Handler when the DOM is fully loaded
   document.getElementById("theButton").addEventListener("click", getInitialInputs);
   // Handler when all assets (including images) are loaded
 //drawLineStyles();
 });
-
-/*
-$(document).ready(function() {
-  $('#theButton').on('click', getData);
-});
 */
+
+$(document).ready(function() {
+  $('#theButton').on('click', getInitialInputs);
+});
+
 
 function getInitialInputs()
 {
@@ -64,7 +64,7 @@ function getInitialInputs()
     a : parseFloat(document.getElementById('a').value),
   }
 
-  
+
   if (stressDist == "uniformStressModel")
   {
     uniformStress(tensionBrace, compressionBrace, gusset, beam);
