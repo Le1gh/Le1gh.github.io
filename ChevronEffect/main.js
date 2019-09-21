@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
   // Handler when the DOM is fully loaded
-  document.getElementById("theButton").addEventListener("click", getData);
+  document.getElementById("theButton").addEventListener("click", getInitialInputs);
   // Handler when all assets (including images) are loaded
 //drawLineStyles();
 });
@@ -11,8 +11,10 @@ $(document).ready(function() {
 });
 */
 
-function getData()
+function getInitialInputs()
 {
+  let stressDist = document.getElementById('stressModel').value;
+  console.log(stressDist);
   let gusset = 
   {
     length: parseFloat(document.getElementById('gussetLength').value),
@@ -62,12 +64,72 @@ function getData()
     a : parseFloat(document.getElementById('a').value),
   }
 
-
-  drawConnection(tensionBrace, compressionBrace, gusset, beam);
-  //drawLineStyles();
+  if (stressDist == "uniformStressModel")
+  {
+    uniformStress(tensionBrace, compressionBrace, gusset, beam);
+  }
+  else
+  {
+    concentratedStress(tensionBrace, compressionBrace, gusset, beam);
+  }
 }
 
-function drawConnection(tBrace, cBrace, gusset, beam)
+
+function concentratedStress(tBrace, cBrace, gusset, beam)
+{
+  console.log("nothing here yet");
+  displayTableConcentratedForces(999, 888);
+
+  let b = beam.length - beam.a;
+  let CBraceLength = Math.sqrt(Math.pow(beam.a, 2) + Math.pow(beam.storyHeight, 2));
+  let TBraceLength = Math.sqrt(Math.pow(b, 2) + Math.pow(beam.storyHeight, 2));
+  let cosCompAngle = beam.a/CBraceLength;
+  let cosTensAngle = b/TBraceLength;
+  let sinCompAngle = beam.storyHeight/CBraceLength;
+  let sinTensAngle = beam.storyHeight/TBraceLength;
+  let tanCompAngle = beam.storyHeight/beam.a;
+  let tanTensAngle = beam.storyHeight/b;
+  let Fy = 50;
+  let V1 = tBrace.tensionForce *cosTenAngle + cBrace.compressionForce*cosCompAngle;
+  let moment = (tBrace.tensionForce*cosTensAngle + cBrace.compressionForce*cosCompAngle)*beam.d/2;
+  let unbalancedVert = tBrace.tensionForce*sinTensAngle - cBrace.compressionForce*sinCompAngle;
+  let denom = Math.pow(0.9*Fy*gusset.thickness, 2) - Math.pow(V1/(0.6*gusset.length), 2);
+  let zdim = gusset.length/2 - Math.sqrt(0.25*gusset.length*gusset.length - (moment/Math.sqrt(denom)));
+  let zmax = gusset.length - moment/Vef;
+  let c = document.getElementById('myCanvas');
+  let ctx = c.getContext("2d");
+  let bevelFactor = .75;
+  let offsetX = 15;
+  c.height = 900;
+  c.width = 600;
+  ctx.scale(7,7);
+  ctx.translate(1,1);
+  ctx.fillStyle = 'black';
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth=0.07;
+
+
+    //SET SCALE
+   let numPoints = gusset.length*4;
+   let intervalX = gusset.length/numPoints;
+   let maxShear = w*gusset.length/2;
+   let targetScale = 10;
+   let scaleFactor = maxShear/targetScale;
+   maxShear = maxShear/scaleFactor;
+   let w_scaled = w/scaleFactor;
+
+  //DRAW SHEAR X-AXIS
+   ctx.beginPath();
+   ctx.lineWidth=0.15;
+   let yStart = maxShear+2;
+   ctx.font = "small-caps 3px Calibri";
+   ctx.fillText("Shear", 0, yStart-1);
+   ctx.moveTo(0, yStart);
+   ctx.lineTo(offsetX + gusset.length + offsetX, yStart);
+   ctx.stroke();
+}
+
+function uniformStress(tBrace, cBrace, gusset, beam)
 {
   let b = beam.length - beam.a;
   let CBraceLength = Math.sqrt(Math.pow(beam.a, 2) + Math.pow(beam.storyHeight, 2));
@@ -84,7 +146,6 @@ function drawConnection(tBrace, cBrace, gusset, beam)
   let unbalancedVert = tBrace.tensionForce*sinTensAngle - cBrace.compressionForce*sinCompAngle;
   let z = unbalancedVert/gusset.length;
 
-  console.log("a is " + beam.a + ", b is " + b);
   let c = document.getElementById('myCanvas');
   let ctx = c.getContext("2d");
   let bevelFactor = .75;
@@ -93,9 +154,9 @@ function drawConnection(tBrace, cBrace, gusset, beam)
   c.width = 600;
   ctx.scale(7,7);
   ctx.translate(1,1);
-   ctx.fillStyle = 'black';
-   ctx.strokeStyle = 'black';
-    ctx.lineWidth=0.07;
+  ctx.fillStyle = 'black';
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth=0.07;
 
 
     //SET SCALE
@@ -339,6 +400,21 @@ function displayTable(V, M) {
          };
     var newTable = template(data);
     $('#checks').html(newTable);
+    $('#theButton').hide();
+    //$('#startAgainBtn').show();
+
+};
+
+function displayTableConcentratedForces(V, M) {
+    //$('#checks').empty();
+    let source = $("#concStress").html();
+    var template = Handlebars.compile(source);
+    var data = {
+     maxShear : V,
+     maxMoment : M
+         };
+    var newTable = template(data);
+    $('#checks2').html(newTable);
     $('#theButton').hide();
     //$('#startAgainBtn').show();
 

@@ -26,15 +26,15 @@
 <h2>Story Data</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td width ="150">Beam Length (ft): </td>
+	<td width ="180">Beam Length (ft): </td>
 	<td><input class="form-control input-sm" id = "beamLength"></td>
 </tr>
 <tr>
-	<td width ="150">Left Column Centerline to Chevron Connection (ft): </td>
+	<td width ="180">Left Column Centerline to Chevron Connection (ft): </td>
 	<td><input class="form-control input-sm" id = "a"></td>
 </tr>
 <tr>
-	<td width ="150">Story Height (ft): </td>
+	<td width ="180">Story Height (ft): </td>
 	<td><input class="form-control input-sm" id = "storyHeight"></td>
 </tr>
 <!--
@@ -44,7 +44,7 @@
 </tr>
 -->
 <tr>
-	<td width ="150">Beam Size</td>
+	<td width ="180">Beam Size</td>
 	<td><select id = "beamSize" class = "form-control input-sm">
 <option>W14X176</option>
 <option>W24X370</option>
@@ -270,15 +270,15 @@
 <h2>Gusset Data</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td width ="150">Gusset Length (in.):</td>
+	<td width ="180">Gusset Length (in.):</td>
 	<td><input required class="form-control input-sm" id = "gussetLength" ></td>
 </tr>
 <tr>
-	<td>Gusset height (in.):</td>
+	<td width ="180">Gusset height (in.):</td>
 	<td><input class="form-control input-sm" id = "gussetHeight"></td>
 </tr>
 <tr>
-	<td>Gusset thickness (in.):</td>
+	<td width ="180">Gusset thickness (in.):</td>
 	<td><input class="form-control input-sm" id = "gussetThickness"> </td>
 </tr>
 </table>
@@ -286,16 +286,29 @@
 <h2>Force Data</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td width ="150">Force in Tension Brace (kips):</td>
+	<td width ="180">Force in Tension Brace (kips):</td>
 	<td><input class="form-control input-sm" id = "tensionForce"></td>
 </tr>
 <tr>
-	<td>Force in Compression Brace (kips):</td>
+	<td width ="180">Force in Compression Brace (kips):</td>
 	<td><input class="form-control input-sm" id = "compressionForce"></td>
 </tr>
 </table>
 
-
+<h2>Stress Distrubtion</h2>
+<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
+<tr>
+	<td width ="100">Assumed Stress Distrubtion</td>
+	<td >
+		<form>
+			<select id = "stressModel" class = "form-control input-sm">
+				<option value = "uniformStressModel">Uniform Stress</option>
+				<option value = "concentratedForceModel">Concentrated Force</option>
+			</select>
+		</form>
+	</td>
+</tr>
+</table>
 
 <button class = "btn" id="theButton">Calculate Chevron Effect</button>
 </div>
@@ -307,7 +320,7 @@
 
 <div class = "col-md-3" id="checks">
     <script id="shearsMoments" type="text/x-handlebars-template">
-      <h2>Shear and Moment Values</h2>
+      <h2>Values for Uniform Stress Model</h2>
       <table class = "table table-hover table-bordered table-condensed table-striped testTable">
         <tr style ="height: 40px;">
         	<td>Max Shear (kips) </td>
@@ -315,6 +328,27 @@
         </tr>
         <tr style ="height: 40px;">
         	<td>Max Moment (kip-ft)</td>
+        	<td>{{maxMoment}}</td>
+        </tr>
+     </table>
+     </script>
+</div>
+</div>
+
+<div class = "col-md-3" id="checks2">
+    <script id="concStress" type="text/x-handlebars-template">
+      <h2>Values for Concentrated Stress Model</h2>
+      <table class = "table table-hover table-bordered table-condensed table-striped testTable">
+        <tr style ="height: 40px;">
+        	<td>Max Shear Concentrated Model (kips) </td>
+        	<td>{{maxShear}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+        	<td>Max Shear Concentrated Model (kips) </td>
+        	<td>{{maxShear}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+        	<td>Max Moment Concentrated Model (kip-ft)</td>
         	<td>{{maxMoment}}</td>
         </tr>
      </table>

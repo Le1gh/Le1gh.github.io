@@ -17,6 +17,11 @@ h2 {
 	font-size: 18px;
 }
 
+.container
+{
+	margin-left: 50px;
+}
+
 #centeredDiv {
 	display:inline-block;
 }
