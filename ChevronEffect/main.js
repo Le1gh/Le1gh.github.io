@@ -14,7 +14,6 @@ $(document).ready(function() {
 function getInitialInputs()
 {
   let stressDist = document.getElementById('stressModel').value;
-  console.log("here i am!");
   console.log(stressDist);
   let gusset = 
   {
@@ -65,7 +64,7 @@ function getInitialInputs()
     a : parseFloat(document.getElementById('a').value),
   }
 
-  console.log(stressDist);
+  
   if (stressDist == "uniformStressModel")
   {
     uniformStress(tensionBrace, compressionBrace, gusset, beam);
