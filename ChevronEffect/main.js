@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
   // Handler when the DOM is fully loaded
-  document.getElementById("theButton").addEventListener("click", getInitialInputs());
+  document.getElementById("theButton").addEventListener("click", getInitialInputs;
   // Handler when all assets (including images) are loaded
 //drawLineStyles();
 });
