@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", function(){
   // Handler when the DOM is fully loaded
   document.getElementById("theButton").addEventListener("click", getInitialInputs);
 
+  //event listener for the start over button
+  $("#startAgainBtn").on('click', startOver);
 });
 
 /*
@@ -12,6 +14,7 @@ $(document).ready(function() {
 
 function getInitialInputs()
 {
+  let Fy = 50;
   let stressDist = document.getElementById('stressModel').value;
   console.log(stressDist);
   let gusset = 
@@ -40,6 +43,8 @@ function getInitialInputs()
     alert("Brace forces must be provided.");
   }
 
+  let Vgravity = parseFloat(document.getElementById('Vgrav').value);
+
   let beamSize = document.getElementById('beamSize').value;
 
   for (let i = 0; i < Wshapes.length; i++) 
@@ -61,7 +66,11 @@ function getInitialInputs()
     length : parseFloat(document.getElementById('beamLength').value),
     storyHeight : parseFloat(document.getElementById('storyHeight').value),
     a : parseFloat(document.getElementById('a').value),
+    phiVn : Math.round(0.9*Fy*0.6*beamtw*beamd),
+    Vgrav : Vgravity
   }
+
+  console.log(beam.phiVn);
 
 
   if (stressDist == "uniformStressModel")
@@ -78,7 +87,7 @@ function getInitialInputs()
 function concentratedStress(tBrace, cBrace, gusset, beam)
 {
   console.log("nothing here yet");
-  displayTableConcentratedForces(0, 0);
+
 
   let b = beam.length - beam.a;
   let CBraceLength = Math.sqrt(Math.pow(beam.a, 2) + Math.pow(beam.storyHeight, 2));
@@ -95,7 +104,7 @@ function concentratedStress(tBrace, cBrace, gusset, beam)
   let unbalancedVert = tBrace.tensionForce*sinTensAngle - cBrace.compressionForce*sinCompAngle;
   let denom = Math.pow(0.9*Fy*gusset.thickness, 2) - Math.pow(V1/(0.6*gusset.length), 2);
   let zdim = gusset.length/2 - Math.sqrt(0.25*gusset.length*gusset.length - (moment/Math.sqrt(denom)));
-  let zmax = gusset.length - moment/Vef;
+  //let zmax = gusset.length - moment/Vef;
   let c = document.getElementById('myCanvas');
   let ctx = c.getContext("2d");
   let bevelFactor = .75;
@@ -127,6 +136,8 @@ function concentratedStress(tBrace, cBrace, gusset, beam)
    ctx.moveTo(0, yStart);
    ctx.lineTo(offsetX + gusset.length + offsetX, yStart);
    ctx.stroke();
+
+    displayTableConcentratedForces(0, 0, beam.phiVn);
 }
 
 function uniformStress(tBrace, cBrace, gusset, beam)
@@ -140,6 +151,8 @@ function uniformStress(tBrace, cBrace, gusset, beam)
   let sinTensAngle = beam.storyHeight/TBraceLength;
   let tanCompAngle = beam.storyHeight/beam.a;
   let tanTensAngle = beam.storyHeight/b;
+  let V1 = tBrace.tensionForce*cosTensAngle + cBrace.compressionForce*cosCompAngle;
+  let minGusset = Math.round(V1*beam.d/beam.phiVn);
 
   let moment = (tBrace.tensionForce*cosTensAngle + cBrace.compressionForce*cosCompAngle)*beam.d/2;
   let w = 4*moment/(gusset.length*gusset.length);
@@ -387,21 +400,23 @@ function uniformStress(tBrace, cBrace, gusset, beam)
    ctx.fillText("Total", offsetX + 0.25*gusset.length, beamStart + 0.7*beam.d);
    ctx.stroke();
 
-   displayTable(Vmax, Mmax);
+   displayTable(Vmax, Mmax, beam.phiVn, minGusset);
 };
 
-function displayTable(V, M) {
+function displayTable(V, M, phiVn, minG) {
     //$('#checks').empty();
     let source = $("#shearsMoments").html();
     var template = Handlebars.compile(source);
     var data = {
      maxShear : V,
-     maxMoment : M
+     maxMoment : M,
+     beamPhiVn: phiVn,
+     minGusset: minG
          };
     var newTable = template(data);
     $('#checks').html(newTable);
     $('#theButton').hide();
-    //$('#startAgainBtn').show();
+    $('#startAgainBtn').show();
 
 };
 
@@ -411,14 +426,20 @@ function displayTableConcentratedForces(V, M) {
     var template = Handlebars.compile(source);
     var data = {
      maxShear : V,
-     maxMoment : M
+     maxMoment : M,
+     beamPhiVn: phiVn
          };
     var newTable = template(data);
     $('#checks2').html(newTable);
     $('#theButton').hide();
-    //$('#startAgainBtn').show();
-
+    $('#startAgainBtn').show();
 };
+
+
+function startOver() {
+  //$('#startAgainBtn').hide();
+  location.reload();
+}
 
 function drawLineStyles() 
 {

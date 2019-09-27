@@ -39,6 +39,10 @@
 	<td width ="180">Story Height (ft): </td>
 	<td><input class="form-control input-sm" id = "storyHeight"></td>
 </tr>
+<tr>
+	<td width ="180">Maximum Factored Gravity Beam Shear outside connection (kips): </td>
+	<td><input class="form-control input-sm" id = "Vgrav"></td>
+</tr>
 <!--
 <tr>
 	<td width ="220">Beam End to Gusset Start (ft): </td>
@@ -332,10 +336,19 @@
         	<td>Max Moment (kip-ft)</td>
         	<td>{{maxMoment}}</td>
         </tr>
+        <tr style ="height: 40px;">
+        	<td>Beam Shear Strength (kips)</td>
+        	<td>{{beamPhiVn}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+          <td>Min. gusset length to avoid beam web strengthening (in.))</td>
+          <td>{{minGusset}}</td>
+        </tr>
      </table>
      </script>
-</div>
-</div>
+  </div>
+<button class = "btn" id = "startAgainBtn">Start Again</button>
+
 
 <div class = "col-md-3" id="checks2">
     <script id="concStress" type="text/x-handlebars-template">
@@ -349,13 +362,28 @@
         	<td>Max Moment Concentrated Model (kip-ft)</td>
         	<td>{{maxMoment}}</td>
         </tr>
+        <tr style ="height: 40px;">
+        	<td>Beam Shear Strength (kips)</td>
+        	<td>{{beamPhiVn}}</td>
+        </tr>
      </table>
      </script>
 </div>
+
+<!--closes row-->
+</div>
+<!--
+<div class = "row">
+  <div class = "col-md-5"></div>
+  <div class = "col-md-2"></div>
+  <div class = "col-md-5">
+    <button class = "btn" id = "startAgainBtn">Start Again</button>
+  </div>
 </div>
 
+-->
+<!--closes container-->
 </div>
-
 
 <!--<script src = "https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.amd.js"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
