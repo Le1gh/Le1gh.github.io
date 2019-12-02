@@ -6,6 +6,8 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="../MyStyle.css">
   <script type = "text/javascript" src="main.js"></script>
+  <script type = "text/javascript" src="uniformStress.js"></script>
+  <script type = "text/javascript" src="concentratedStress.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src = "../jsFolder/jquery-3.1.1.js"></script>
 <script src = "../jsFolder/handlebars-v4.0.5.js"></script>
@@ -23,12 +25,13 @@
 <div class = "container">
 <div class = "row">
 
-<div class = "col-md-3">
-<h2>THESE VALUES HAVE NOT BEEN VERIFIED.</h2>
+<div class = "col-md-4">
+<h2>
+Assume that braces are below beam and the compression brace is on the left.</h2>
 <h2>Story Data</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td width ="180">Beam Length (ft): </td>
+	<td width ="150">Beam Length (ft): </td>
 	<td><input class="form-control input-sm" id = "beamLength"></td>
 </tr>
 <tr>
@@ -273,38 +276,58 @@
 </table>
 
 
-<h2>Gusset Data</h2>
+<h2>Braces and Gusset</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
 	<td width ="180">Gusset Length (in.):</td>
-	<td><input required class="form-control input-sm" id = "gussetLength" ></td>
+	<td><input required class="form-control input-sm" id = "gussetLength1" ></td>
 </tr>
 <tr>
 	<td width ="180">Gusset height (in.):</td>
-	<td><input class="form-control input-sm" id = "gussetHeight"></td>
+	<td><input class="form-control input-sm" id = "gussetHeight1"></td>
 </tr>
 <tr>
 	<td width ="180">Gusset thickness (in.):</td>
-	<td><input class="form-control input-sm" id = "gussetThickness"> </td>
+	<td><input class="form-control input-sm" id = "gussetThickness1"> </td>
+</tr>
+<tr>
+  <td width ="180">Force in Tension Brace (kips):</td>
+  <td><input class="form-control input-sm" id = "tensionForce1"></td>
+</tr>
+<tr>
+  <td width ="180">Force in Compression Brace (kips):</td>
+  <td><input class="form-control input-sm" id = "compressionForce1"></td>
 </tr>
 </table>
-
-<h2>Force Data</h2>
+<!--
+<h2>Brace and Gusset - Side 2</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td width ="180">Force in Tension Brace (kips):</td>
-	<td><input class="form-control input-sm" id = "tensionForce"></td>
+  <td width ="180">Gusset 2 Length (in.):</td>
+  <td><input required class="form-control input-sm" id = "gussetLength2" ></td>
 </tr>
 <tr>
-	<td width ="180">Force in Compression Brace (kips):</td>
-	<td><input class="form-control input-sm" id = "compressionForce"></td>
+  <td width ="180">Gusset 2 height (in.):</td>
+  <td><input class="form-control input-sm" id = "gussetHeight2"></td>
+</tr>
+<tr>
+  <td width ="180">Gusset 2 thickness (in.):</td>
+  <td><input class="form-control input-sm" id = "gussetThickness2"> </td>
+</tr>
+<tr>
+  <td width ="180">Force in Tension Brace (kips):</td>
+  <td><input class="form-control input-sm" id = "tensionForce2"></td>
+</tr>
+<tr>
+  <td width ="180">Force in Compression Brace (kips):</td>
+  <td><input class="form-control input-sm" id = "compressionForce2"></td>
 </tr>
 </table>
-
+-->
 <h2>Stress Distrubtion</h2>
 <table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
 <tr>
-	<td width ="100">Assumed Stress Distrubtion</td>
+	<td width ="180">Assumed Stress Distrubtion</td>
 	<td >
 		<form>
 			<select id = "stressModel" class = "form-control input-sm">
@@ -324,8 +347,9 @@
 <!--<div id = "chart_div"></div>-->
 </div>
 
-<div class = "col-md-3" id="checks">
-    <script id="shearsMoments" type="text/x-handlebars-template">
+<div class = "col-md-2">
+  <div id="uniformDivID">
+    <script id="uniformStressDisplay" type="text/x-handlebars-template">
       <h2>Values for Uniform Stress Model</h2>
       <table class = "table table-hover table-bordered table-condensed table-striped testTable">
         <tr style ="height: 40px;">
@@ -333,7 +357,7 @@
         	<td>{{maxShear}}</td>
         </tr>
         <tr style ="height: 40px;">
-        	<td>Max Moment (kip-ft)</td>
+        	<td>Max Moment (kip-in.)</td>
         	<td>{{maxMoment}}</td>
         </tr>
         <tr style ="height: 40px;">
@@ -347,30 +371,49 @@
      </table>
      </script>
   </div>
-<button class = "btn" id = "startAgainBtn">Start Again</button>
 
-
-<div class = "col-md-3" id="checks2">
-    <script id="concStress" type="text/x-handlebars-template">
+  <div id="concentratedDivID">
+    <script id="concStressDisplay" type="text/x-handlebars-template">
       <h2>Values for Concentrated Stress Model</h2>
       <table class = "table table-hover table-bordered table-condensed table-striped testTable">
         <tr style ="height: 40px;">
-        	<td>Max Shear Concentrated Model (kips) </td>
+        	<td>Max Shear (kips) </td>
         	<td>{{maxShear}}</td>
         </tr>
         <tr style ="height: 40px;">
-        	<td>Max Moment Concentrated Model (kip-ft)</td>
+        	<td>Max Moment (kip-in.)</td>
         	<td>{{maxMoment}}</td>
         </tr>
         <tr style ="height: 40px;">
         	<td>Beam Shear Strength (kips)</td>
         	<td>{{beamPhiVn}}</td>
         </tr>
+         <tr style ="height: 40px;">
+          <td><i>V<sub>ef</sub></i>  (kips)</td>
+          <td>{{Vef}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+          <td><i>z</i> (WLY) (in.)</td>
+          <td>{{z_WLY}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+          <td><i>z</i> (gusset strength) (in.)</td>
+          <td>{{z_gusset}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+          <td><i>z<sub>max</sub></i> (in.)</td>
+          <td>{{z_max}}</td>
+        </tr>
+        <tr style ="height: 40px;">
+          <td><i>R<sub>z</sub></i> (kips)</td>
+          <td>{{Rz}}</td>
+        </tr>
      </table>
      </script>
-</div>
+  </div>
 
 <!--closes row-->
+<button class = "btn" id = "startAgainBtn">Start Over</button>
 </div>
 <!--
 <div class = "row">
