@@ -38,6 +38,10 @@ function getInitialInputs()
   }
 
   let Vgravity = parseFloat(document.getElementById('Vgrav').value);
+  if (Number.isNaN(Vgravity))
+  {
+    Vgravity = 0;
+  }
 
   let beamSize = document.getElementById('beamSize').value;
 
