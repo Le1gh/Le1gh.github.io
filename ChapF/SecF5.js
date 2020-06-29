@@ -1,37 +1,18 @@
-function phiMn_LTB_F5(L, beam)
+function phiMn_LTB_F5(L, beam, version)
 {
     //assuming this applies only to BU
     var Cb = 1;
     var E = 29000.;
 
     var MnLTB;
-    var rt = 0;
-    var h0 = 0;
-    var Myc;
-    var Lr = 0;
-    var res = getF4Vals(beam);
-    if (!beam.isBU)
-    {
-        h0 = beam.d - beam.tf;
-        Myc = beam.Fy*beam.Sx;
-        var d = beam.J / (beam.Sx * h0);
-        var g = Math.sqrt(Math.pow(d, 2) + 6.76 * Math.pow((res.FL / E), 2));
-        Lr = (1. / 12) * 1.95 * rt * (E / (res.FL)) * Math.sqrt(d + g);
-    }
-    if (beam.isBU)
-    {
-        var h = beam.d - beam.tf_comp - beam.tf_tens;
-        var J = (1/3)*(beam.bf_comp*Math.pow(beam.tf_comp, 3) + beam.bf_tens*Math.pow(beam.tf_tens, 3) + h*Math.pow(beam.tw, 3));
-        beam.J = J; 
-        h0 = beam.d - 0.5*beam.tf_comp - 0.5*beam.tf_tens;
-        var d = beam.J / (beam.Sxc * h0);
-        var g = Math.sqrt(Math.pow(d, 2) + 6.76 * Math.pow((res.FL / E), 2));
-        Lr = (1. / 12) * 1.95 * rt * (E / (res.FL)) * Math.sqrt(d + g);
-        Myc = beam.Fy*beam.Sxc;
-    }
+    var MnLTB_new;
+    var res = getF5Vals(beam);
+    var Fcr = 0;
+    var Myc = beam.Fy*beam.Sxc;
 
-     
-    var Lp = (1. / 12) * 1.1 * rt * Math.sqrt(E / beam.Fy);
+    var Lp = (1. / 12) * 1.1 * res.rt * Math.sqrt(E / beam.Fy);
+    var Lr = (1. / 12) * Math.PI * res.rt * Math.sqrt(E/(0.7*beam.Fy));
+    var Lr_new = (1. / 12) * Math.PI * res.rt * Math.sqrt(E/(0.7*Myc/beam.Sxc));
     
     if(L < Lp)
         {
@@ -39,94 +20,131 @@ function phiMn_LTB_F5(L, beam)
         }
     else if(L > Lp && L < Lr)
         {
-            MnLTB = Cb * (res.Rpc*Myc - (res.Rpc*Myc - res.FL * beam.Sxc) * (L - Lp) / (Lr - Lp));
-            MnLTB = 0.9*Math.min(MnLTB, res.Rpc*Myc)/12;
-            MnLTB = MnLTB + " (inelastic)";
+            Fcr = Cb * (beam.Fy - (0.3*beam.Fy)*(L - Lp)/(Lr - Lp));
+            Fcr = Math.min(Fcr, beam.Fy);
+            MnLTB = res.Rpg*Fcr*beam.Sxc;
+            MnLTB = Math.round(0.9*MnLTB/12);
+            MnLTB = MnLTB + " (inelastic, Sec. F5)";
+
         }
     else 
         {
-            var Fcr = (Cb*E*3.14159*3.14159/(Math.pow(L*12/res.rt, 2)))*Math.sqrt(1+0.078*(beam.J/(beam.Sxc*h0))*Math.pow(L*12/res.rt, 2));
-            MnLTB = beam.Sxc*Fcr;
-            MnLTB = 0.9*Math.min(MnLTB, res.Rpc*Myc)/12;
-            MnLTB = MnLTB + " (elastic)";
+            Fcr = Cb*E*3.14159*3.14159/(Math.pow(L*12/res.rt, 2));
+            Fcr = Math.min(Fcr, beam.Fy);
+            MnLTB = res.Rpg*Fcr*beam.Sxc;
+            MnLTB = Math.round(.9*MnLTB/12);
+            MnLTB = MnLTB + " (elastic, Sec. F5)";
+
         }
 
-    console.log("MnLTB F4 is " + MnLTB);
+    if (L > Lp && L < Lr_new)
+    {
+        MnLTB_new = Cb*(res.Rpg_new*Myc - (res.Rpg_new*Myc - 0.7*res.Rpg_new*My)*(L - Lp)/(Lr_new - Lp));
+        MnLTB_new = Math.min(MnLTB_new, res.Rpg_new*Myc);
+        MnLTB_new = Math.round(0.9*MnLTB_new/12);
+        MnLTB_new = MnLTB_new + " (inelastic, Sec. F5)";
+    }
+    else
+    {
+        MnLTB_new = Cb*E*3.14159*3.14159*beam.Sxc*res.Rpg_new/(Math.pow(L*12/res.rt, 2));
+        MnLTB_new = Math.min(MnLTB_new, res.Rpg_new*Myc);
+        MnLTB_new = Math.round(.9*MnLTB_new/12);
+        MnLTB_new = MnLTB_new + " (elastic, Sec. F5)";
+    }
+
+    console.log("MnLTB F5 is " + MnLTB);
     console.log("Lp " + Lp);
     console.log("Lr " + Lr);
-    return MnLTB;   
+    if (version === 'new')
+        return MnLTB_new;
+    else
+        return MnLTB;   
 }
 
-function phiMn_CFY(L, beam)
+function phiMn_CFY_F5(L, beam, version)
 {
-    var Myc = beam.Fy*beam.Sxc;
-    var Mp = beam.Fy*beam.Z;
-    var res = getF4Vals(beam);
-    var phiMn_compFlangeYielding = 0.9*res.Rpc*Myc/12;
+    var res = getF5Vals(beam);
+    console.log("Rpg " + res.Rpg);
+    var phiMn_compFlangeYielding = Math.round(0.9*res.Rpg*beam.Fy*beam.Sxc/12);
+    phiMn_compFlangeYielding  = phiMn_compFlangeYielding + " (Sec F5)";
+
+    var phiMn_compFlangeYielding_new = Math.round(0.9*res.Rpg_new*beam.Fy*beam.Sxc/12);
+    phiMn_compFlangeYielding_new  = phiMn_compFlangeYielding_new + " (Sec F5)";
     console.log("CFY is " + phiMn_compFlangeYielding);
-    return phiMn_compFlangeYielding;
+    if (version === 'new')
+        return phiMn_compFlangeYielding_new;
+    else
+        return phiMn_compFlangeYielding;
 }
 
 
-function phiMn_FLB_F4(L, beam)
+function phiMn_FLB_F5(L, beam, version)
 {
-    var Mn_FLB_F4 = "N/A";
-    var res = getF4Vals(beam);
+    var Mn_FLB_F5 = "N/A";
+    var Mn_FLB_F5_new = "N/A";
+    var Fcr = 0;
+    var res = getF5Vals(beam);
     let kc = 4/(Math.sqrt(beam.htw));
+    var Myc = beam.Fy*beam.Sxc;
     if (kc < 0.35)
         kc = 0.35;
     else if (kc > 0.76)
         kc = 0.76
     if (beam.bf2tf < beam.lambdar_flange && beam.bf2tf > beam.lambdap_flange)
     {
-        console.log("inside Comp FLB check with NC flanges");
-        Mn_FLB_F4 = (0.9/12)*res.Rpc*res.Myc - (res.Rpc*res.Myc - res.FL*beam.Sxc)*(beam.bf2tf - beam.lambdap_flange)/(beam.lambdar_flange - beam.lambdap_flange);
-        Mn_FLB_F4 = Mn_FLB_F4 + " (Sec F4)";
+        console.log("inside Comp FLB check with NC flanges in F5");
+        Fcr = beam.Fy - (0.3*beam.Fy)*(beam.bf2tf - beam.lambdap_flange)/(beam.lambdar_flange - beam.lambdap_flange);
+        Mn_FLB_F5 = Math.round((0.9/12)*Fcr*res.Rpg*beam.Sxc);
+        Mn_FLB_F5 = Mn_FLB_F5 + " (Sec F5)";
     }  
     else if (beam.bf2tf > beam.lambdar_flange)
     {
-        console.log("inside Comp FLB check with slender flanges");
-        Mn_FLB_F4 = (0.9/12)*0.9*E*beam.Sx*kc/Math.pow(beam.bf2tf,2);
-        Mn_FLB_F4 = Mn_FLB_F4 + " (Sec F4)";
+        console.log("inside Comp FLB check with slender flanges in F5");
+        Fcr = (0.9/12)*0.9*E*kc/Math.pow(beam.bf2tf,2);
+        Mn_FLB_F5 = Math.round((0.9/12)*Fcr*res.Rpg*beam.Sxc);
+        Mn_FLB_F5 = Mn_FLB_F5 + " (Sec F5)";
     }
-    return Mn_FLB_F4;
+
+    Mn_FLB_F5_new = res.Rpg_new*Myc - 0.25*res.Rpg_new*Myc*(beam.bf2tf - beam.lambdap_flange)/(beam.lambdar_flange - beam.lambdap_flange);
+    Mn_FLB_F5_new = (0.9/12)* Mn_FLB_F5_new;
+    Mn_FLB_F5_new = Mn_FLB_F5_new + " (Sec F5)";
+
+    if (version === 'new')
+        return Mn_FLB_F5_new;
+    else
+        return Mn_FLB_F5;
 }
 
-function phiMn_TFY(L, beam)
+function phiMn_TFY_F5(L, beam)
 {
     var Mn_TFY = "N/A";
-    var Sx = Math.min(beam.Sxc, beam.Sxt);
-    var Mp = beam.Fy*Math.min(beam.Z, 1.6*Sx);
-    var Rpt = 0;
-    var Myt = beam.Fy*beam.Sxt;
-    //calc Rpt
-    if (beam.Iyc/beam.Iy > 0.23)
-    {
-        if  (beam.hc/beam.tw <= beam.lambdap_web)
-            Rpt = Mp/Myt;
-        else
-        {
-            var Mratio = Mp/Myt;
-            var lambda = beam.hc/beam.tw;
-            var Rpt_temp = Mratio - (Mratio-1)*( (lambda - beam.lambdap_web)/(beam.lambdar_web - beam.lambdap_web) );
-            Rpt = Math.max(Mratio, Rpt_temp);
-        }
-        Mn_TFY = 0.9*Rpt*Myt/12;
-    }
-    console.log("Rpt = " + Rpt);
-    return Mn_TFY;
 
+    //calc limit state
+    if (beam.Sxt >= beam.Sxc)
+    {
+        Mn_TFY = "N/A";
+    }
+    else
+    {
+        Mn_TFY = Math.round(0.9*beam.Fy*beam.Sxt/12);
+        Mn_TFY = Mn_TFY + " (Sec F5)";
+    }
+    return Mn_TFY;
 }
 
 function getF5Vals(beam) 
 {
     var aw = beam.hc*beam.tw/(beam.bf_comp*beam.tf_comp);
+    var crw = 3.1 + 5/aw;
+    crw = Math.min(crw, 4.6);
+    crw = Math.max(crw, 5.7);
     var rt = beam.bf_comp/Math.sqrt(12*(1+aw/6));
     var Rpc = 1;
+    var E = 29000;
     var Myc = beam.Fy*beam.Sxc;
     var Sx = Math.min(beam.Sxt, beam.Sxc);
     var Mp = beam.Fy*Math.min(beam.Z, 1.6*Sx);
-    var FL = 0.7*beam.Fy;
+    var Rpg = 0;
 
     //calc Rpc
     if (beam.Iyc/beam.Iy > 0.23)
@@ -143,16 +161,23 @@ function getF5Vals(beam)
     }
     console.log("Rpc = " + Rpc);
 
-    //calc FL
-    if (beam.Sxt/beam.Sxc < 0.7)
-        FL = Math.min(0.5*beam.Fy, beam.Sxt*beam.Fy/beam.Sxc);
+    //calc RPG
+    var firstTerm = aw/(1200+300*aw);
+    var secTerm = beam.hc/beam.tw - 5.7*Math.sqrt(E/beam.Fy);
+    Rpg = 1 - firstTerm*secTerm;
+    Rpg = Math.min(Rpg, 1);
+
+    //calc Rpg new
+    var secTerm_new = beam.hc/beam.tw - crw*Math.sqrt(E/beam.Fy);
+    var Rpg_new = 1-firstTerm*secTerm_new; 
     
     var result =
     {
         Rpc: Rpc,
-        FL: FL,
         Myc: Myc,
-        rt: rt
+        rt: rt,
+        Rpg: Rpg, 
+        Rpg_new: Rpg_new
     }
     return result;
 }

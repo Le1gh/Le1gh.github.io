@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
    
-console.log("ready");
+$('#startAgainBtn').on('click', startOver);
 //event listener for BU shapes
 $('#beamForm').one('change', function() {
     var type = $('#beamSize').val();  
@@ -185,15 +185,15 @@ function phiMn_LTB(L, beam)
             console.log("Cb " + Cb);
             console.log("Mp " + Mp);
             console.log("Sxc " + beam.Sxc);
-            MnLTB = 0.9*Math.min(MnLTB, Mp)/12;
-            MnLTB = MnLTB + " (inelastic)";
+            MnLTB = Math.round(0.9*Math.min(MnLTB, Mp)/12);
+            MnLTB = MnLTB + " (inelastic, Sec. F3)";
         }
 	else 
 		{
 			var Fcr = (Cb*E*3.14159*3.14159/(Math.pow(L*12/rts, 2)))*Math.sqrt(1+0.078*(beam.J/(beam.Sxc*h0))*Math.pow(L*12/rts, 2));
 			MnLTB = beam.Sxc*Fcr;
-			MnLTB = 0.9*Math.min(MnLTB, Mp)/12;
-            MnLTB = MnLTB + " (elastic)";
+			MnLTB = Math.round(0.9*Math.min(MnLTB, Mp)/12);
+            MnLTB = MnLTB + " (elastic, Sec. F3)";
 		}
     console.log("LTB " + MnLTB);
     console.log("Lp" + Lp);
@@ -218,16 +218,30 @@ function phiMn_FLB_2016(L, beam)
     if(beam.bf2tf > beam.lambdap_flange && beam.bf2tf < beam.lambdar_flange)
     {
         MnFLB = Mp - (Mp - 0.7 * beam.Fy * beam.Sx) * (beam.bf2tf - beam.lambdap_flange) / (beam.lambdar_flange - beam.lambdap_flange);        
-        MnFLB = 0.9*MnFLB/12;
+        MnFLB = Math.round(0.9*MnFLB/12);
         MnFLB = MnFLB + " (Sec F3)";
     }
     else if(beam.bf2tf > beam.lambdar_flange)
     {
         MnFLB = 0.9*E*beam.Sx*kc/Math.pow(beam.bf2tf,2);
-        MnFLB = 0.9*MnFLB/12;
+        MnFLB = Math.round(0.9*MnFLB/12);
         MnFLB = MnFLB + " (Sec F3)";
     }
 
+    return MnFLB;
+}
+
+function phiMn_FLB_new(L, beam)
+{
+    var MnFLB = 0;
+    var Cb = 1;
+    var E = 29000.;
+    var Mp = beam.Z * beam.Fy;
+   
+    MnFLB = Mp - (Mp - 0.75 * beam.Fy * beam.Sx) * (beam.bf2tf - beam.lambdap_flange) / (beam.lambdar_flange - beam.lambdap_flange);        
+    MnFLB = Math.round(0.9*MnFLB/12);
+    MnFLB = MnFLB + " (Sec F3)";
+    
     return MnFLB;
 }
 
@@ -238,7 +252,7 @@ function start()
     if (beamSize === "BU")
     {
         beam = {
-            Fy: 50,
+            Fy: 60,
             Fu: 65,
             d: parseFloat($('#depth').val()),
             tw: parseFloat($('#tw').val()),
@@ -273,7 +287,7 @@ function start()
             if (beamSize === Wshapes[i].Size) 
             {
                 beam = {
-                    Fy: 50,
+                    Fy: 60,
                     Fu: 65,
                     tw: parseFloat(Wshapes[i].tw),
                     bf: parseFloat(Wshapes[i].bf),
@@ -301,9 +315,12 @@ function start()
     var limitStates = 
     {
         LTB: "N/A",
+        LTB_new: "N/A",
         FLB_2016: "N/A",
+        FLB_new: "N/A",
         phiMP: 0.9*beam.Z*beam.Fy/12,
         CFY: "N/A",
+        CFY_new: "N/A",
         TFY: "N/A"
     }
     //Section F2 and F3
@@ -313,22 +330,40 @@ function start()
     }
     else if (beam.isSymmetric && status.web === 'compact' && (status.flange === 'non-compact' || status.flange === 'slender'))
     {
-        limitStates.LTB= phiMn_LTB(L, beam);
+        limitStates.LTB= phiMn_LTB(L, beam, '2016');
+        limitStates.LTB_new = limitStates.LTB;
         limitStates.FLB_2016 = phiMn_FLB_2016(L, beam);
+        limitStates.FLB_new = phiMn_FLB_new(L, beam);
     }
     //Section F4 - NO ROLLED SHAPES FALL IN THIS SECTION BECAUSE ALL WEBS ARE COMPACT
     else if ( (beam.isSymmetric && status.web === 'non-compact') || (!beam.isSymmetric && status.web != 'slender') )
     {
         //TODO: take out all these Ls if unnecessary
         console.log("Section F4 applies");
-        limitStates.CFY = phiMn_CFY(L, beam);
-        limitStates.LTB = phiMn_LTB_F4(L, beam);
-        limitStates.FLB_2016 = phiMn_FLB_F4(L, beam);
+        limitStates.CFY = phiMn_CFY_F4(L, beam);
+        limitStates.CFY_new = limitStates.CFY;
+        limitStates.LTB = phiMn_LTB_F4(L, beam, '2016');
+        limitStates.LTB_new = phiMn_LTB_F4(L, beam, 'new');
+        limitStates.FLB_2016 = phiMn_FLB_F4(L, beam, '2016');
+        limitStates.FLB_new = phiMn_FLB_F4(L, beam, 'new');
         limitStates.TFY = phiMn_TFY(L, beam);
         console.log("CFY " + limitStates.CFY + "\nTFY: " + limitStates.TFY + "\nFLB: " + limitStates.FLB_2016);
         limitStates.phiMP = "N/A";
     }
-
+    //Section F5
+    else if ( status.web === 'slender' )
+    {
+        //TODO: take out all these Ls if unnecessary
+        console.log("Section F5 applies");
+        limitStates.CFY = phiMn_CFY_F5(L, beam, '2016');  
+        limitStates.CFY_new = phiMn_CFY_F5(L, beam, 'new');  
+        limitStates.LTB = phiMn_LTB_F5(L, beam, '2016');
+        limitStates.LTB_new = phiMn_LTB_F5(L, beam, 'new');
+        limitStates.FLB_2016 = phiMn_FLB_F5(L, beam);
+        limitStates.TFY = phiMn_TFY_F5(L, beam);
+        console.log("CFY " + limitStates.CFY + "\nTFY: " + limitStates.TFY + "\nFLB: " + limitStates.FLB_2016);
+        limitStates.phiMP = "N/A";
+    }
     console.log("CFY " + limitStates.CFY);
     showTable(status, limitStates);
 }
@@ -337,11 +372,18 @@ function showTable(status, LS)
 {
     $('#flangeStatus').html(status.flange);
     $('#webStatus').html(status.web);
-    $('#yielding').html(LS.phiMP);
+    $('.yielding').html(LS.phiMP);
     $('#LTB').html(LS.LTB);
+    $('#LTB_new').html(LS.LTB_new);
     $('#FLB_2016').html(LS.FLB_2016);
+    $('#FLB_new').html(LS.FLB_new);
     $('#CFY_2016').html(LS.CFY);
+    $('#CFY_new').html(LS.CFY_new);
     $('#TFY_2016').html(LS.TFY);
+    $('#TFY_new').html("N/A");
+
+    $('#runFunc').hide();
+    $('#startAgainBtn').show();
 
 }
 
@@ -352,8 +394,7 @@ function getBUprops(beam)
     var clear_h = beam.d-beam.tf_comp-beam.tf_tens;
     var webArea = clear_h*beam.tw;
     var area = compFlangeArea + tensFlangeArea + webArea;
-    var NAfromCompFlange = (compFlangeArea*(0.5*beam.tf_comp) + tensFlangeArea*(beam.d-0.5*beam.tf_tens) + webArea*(0.5*beam.d))/area;
-    var NAtoCenter = 0.5*beam.d - NAfromCompFlange;
+    var NAfromCompFlange = (compFlangeArea*(0.5*beam.tf_comp) + tensFlangeArea*(beam.d-0.5*beam.tf_tens) + webArea*(beam.tf_comp + 0.5*clear_h))/area;
     var Ix_compFlange = (1/12)*beam.bf_comp*Math.pow(beam.tf_comp,3);
     var Ix_tensFlange = (1/12)*beam.bf_tens*Math.pow(beam.tf_tens,3);
     var Ix_web = (1/12)*beam.tw*Math.pow(clear_h, 3);
@@ -361,6 +402,7 @@ function getBUprops(beam)
     Ix = Ix + Ix_tensFlange + tensFlangeArea*Math.pow(beam.d-0.5*beam.tf_tens-NAfromCompFlange, 2);
     Ix = Ix + Ix_web + webArea*Math.pow(beam.tf_comp+0.5*clear_h-NAfromCompFlange, 2);
     hc = 2*(NAfromCompFlange-beam.tf_comp);
+    console.log("hc is " + hc);
     var Iy = (1/12)*beam.tf_comp*Math.pow(beam.bf_comp, 3);
     Iy = Iy + (1/12)*beam.tf_tens*Math.pow(beam.bf_tens, 3);
     Iy = Iy + (1/12)*(beam.d-beam.tf_comp-beam.tf_tens)*Math.pow(beam.tw, 3);
@@ -415,7 +457,7 @@ function getBUprops(beam)
 
     var newBeam =
     {
-        Fy: 50,
+        Fy: 60,
         Fu: 65,
         bf_comp: beam.bf_comp,
         tf_comp: beam.tf_comp,
@@ -449,3 +491,7 @@ function getBUprops(beam)
 }
 
 
+function startOver() {
+    location.reload();
+
+}
