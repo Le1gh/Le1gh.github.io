@@ -191,7 +191,6 @@ function getF4Vals(beam)
             Rpc = Math.max(Mratio, Rpc_temp);            
         }
     }
-    console.log("Rpc = " + Rpc);
 
     //calc FL
     if (beam.Sxt/beam.Sxc < 0.7)

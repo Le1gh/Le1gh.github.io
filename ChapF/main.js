@@ -9,32 +9,32 @@ $('#beamForm').one('change', function() {
     if (type === "BU") {
         
         var BUTable = document.getElementById('inputTable');
-        var row1 = BUTable.insertRow(2);
+        var row1 = BUTable.insertRow(3);
         var cell1 = row1.insertCell(0);
         var cell2 = row1.insertCell(1);
         cell1.innerHTML = "Depth";
         cell2.innerHTML = "<input id='depth' class = 'form-control input-sm'></input>";
-        var row2 = BUTable.insertRow(3);
+        var row2 = BUTable.insertRow(4);
         var cell1 = row2.insertCell(0);
         var cell2 = row2.insertCell(1);
         cell1.innerHTML = "Web thickness";
         cell2.innerHTML = "<input id='tw' class = 'form-control input-sm' ></input>";
-        var row3 = BUTable.insertRow(4);
+        var row3 = BUTable.insertRow(5);
         var cell1 = row3.insertCell(0);
         var cell2 = row3.insertCell(1);
         cell1.innerHTML = "Comp. Flange Width";
         cell2.innerHTML = "<input id='bfComp' class = 'form-control input-sm'></input>";
-        var row4 = BUTable.insertRow(5);
+        var row4 = BUTable.insertRow(6);
         var cell1 = row4.insertCell(0);
         var cell2 = row4.insertCell(1);
         cell1.innerHTML = "Comp. Flange Thickness";
         cell2.innerHTML = "<input id='tfComp' class = 'form-control input-sm'></input>";
-        var row5 = BUTable.insertRow(6);
+        var row5 = BUTable.insertRow(7);
         var cell1 = row5.insertCell(0);
         var cell2 = row5.insertCell(1);
         cell1.innerHTML = "Tens. Flange Width";
         cell2.innerHTML = "<input id='bfTens' class = 'form-control input-sm'></input>";
-        var row6 = BUTable.insertRow(7);
+        var row6 = BUTable.insertRow(8);
         var cell1 = row6.insertCell(0);
         var cell2 = row6.insertCell(1);
         cell1.innerHTML = "Tens. Flange Thickness";
@@ -248,12 +248,12 @@ function phiMn_FLB_new(L, beam)
 function start() 
 {
     var L=parseInt($('#flexL').val());
+    var Fy=parseInt($('#Fy').val());
     var beamSize= $('#beamSize').val();
     if (beamSize === "BU")
     {
         beam = {
-            Fy: 60,
-            Fu: 65,
+            Fy: Fy,
             d: parseFloat($('#depth').val()),
             tw: parseFloat($('#tw').val()),
             tf_comp: parseFloat($('#tfComp').val()),
@@ -287,8 +287,7 @@ function start()
             if (beamSize === Wshapes[i].Size) 
             {
                 beam = {
-                    Fy: 60,
-                    Fu: 65,
+                    Fy: Fy,
                     tw: parseFloat(Wshapes[i].tw),
                     bf: parseFloat(Wshapes[i].bf),
                     tf: parseFloat(Wshapes[i].tf),
@@ -457,8 +456,7 @@ function getBUprops(beam)
 
     var newBeam =
     {
-        Fy: 60,
-        Fu: 65,
+        Fy: beam.Fy,
         bf_comp: beam.bf_comp,
         tf_comp: beam.tf_comp,
         bf_tens: beam.tf_tens,
