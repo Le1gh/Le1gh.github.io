@@ -37,14 +37,14 @@ function phiMn_LTB_F5(L, beam, version)
 
         }
 
-    if (L > Lp && L < Lr_new)
+    if (L > Lp && L <= Lr_new)
     {
-        MnLTB_new = Cb*(res.Rpg_new*Myc - (res.Rpg_new*Myc - 0.7*res.Rpg_new*My)*(L - Lp)/(Lr_new - Lp));
+        MnLTB_new = Cb*(res.Rpg_new*Myc - (res.Rpg_new*Myc - 0.7*res.Rpg_new*Myc)*(L - Lp)/(Lr_new - Lp));
         MnLTB_new = Math.min(MnLTB_new, res.Rpg_new*Myc);
         MnLTB_new = Math.round(0.9*MnLTB_new/12);
         MnLTB_new = MnLTB_new + " (inelastic, Sec. F5)";
     }
-    else
+    else if (L > Lr_new)
     {
         MnLTB_new = Cb*E*3.14159*3.14159*beam.Sxc*res.Rpg_new/(Math.pow(L*12/res.rt, 2));
         MnLTB_new = Math.min(MnLTB_new, res.Rpg_new*Myc);
@@ -53,6 +53,7 @@ function phiMn_LTB_F5(L, beam, version)
     }
 
     console.log("MnLTB F5 is " + MnLTB);
+    console.log("MnLTB_new F5 is " + MnLTB_new);
     console.log("Lp " + Lp);
     console.log("Lr " + Lr);
     if (version === 'new')
@@ -159,7 +160,6 @@ function getF5Vals(beam)
             Rpc = Math.max(Mratio, Rpc_temp);
         }
     }
-    console.log("Rpc = " + Rpc);
 
     //calc RPG
     var firstTerm = aw/(1200+300*aw);
