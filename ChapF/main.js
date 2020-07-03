@@ -317,7 +317,7 @@ function start()
         LTB_new: "N/A",
         FLB_2016: "N/A",
         FLB_new: "N/A",
-        phiMP: 0.9*beam.Z*beam.Fy/12,
+        phiMP: Math.round(0.9*beam.Z*beam.Fy/12),
         CFY: "N/A",
         CFY_new: "N/A",
         TFY: "N/A"
@@ -326,6 +326,7 @@ function start()
     if (beam.isSymmetric && status.flange === 'compact' && status.web === 'compact')
     {
         limitStates.LTB= phiMn_LTB(L, beam);
+        limitStates.LTB_new = limitStates.LTB;
     }
     else if (beam.isSymmetric && status.web === 'compact' && (status.flange === 'non-compact' || status.flange === 'slender'))
     {
