@@ -3,10 +3,14 @@ $(document).ready(function() {
    
 $('#startAgainBtn').on('click', startOver);
 //event listener for BU shapes
-$('#beamForm').one('change', function() {
+
+$('#beamForm').on('change', function() {
+
+//$('#beamForm').one('change', function() {
     var type = $('#beamSize').val();  
-    
-    if (type === "BU") {
+    var n = document.getElementById('inputTable').rows.length;
+
+    if (type === "BU" && n <= 6) {
         
         var BUTable = document.getElementById('inputTable');
         var row1 = BUTable.insertRow(4);
