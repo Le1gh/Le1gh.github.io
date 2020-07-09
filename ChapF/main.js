@@ -59,90 +59,169 @@ function getSlenderness(beam)
     let lambdar_web;
     let lambdap_flange;
     let lambdar_flange;
+    var Mp = beam.Z * beam.Fy;
+    var My = Math.min(beam.Sxc, beam.Sxt)*beam.Fy;
+    My = Math.min(My, Mp);
+    var kc_temp = Math.min(0.76, 4/Math.sqrt(beam.htw));
+    var kc = Math.max(kc_temp, 0.35);
+    console.log("Mp: " + Mp);
+    console.log("beam.htw " + beam.htw);
+
+    //WEBS
+    //if symmetric, case 15
     if (beam.isSymmetric)
     {
-        var Mp = beam.Z * beam.Fy;
-        lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
-        lambdar_flange = Math.sqrt(E / beam.Fy);
         lambdap_web = 3.76*Math.sqrt(E/beam.Fy);
         lambdar_web = 5.7*Math.sqrt(E/beam.Fy);
-        if (beam.bf2tf <= lambdap_flange)
-            flangeStatus = "compact";
-        else if (beam.bf2tf > lambdap_flange && beam.bf2tf < lambdar_flange)
-            flangeStatus = "non-compact";
-        else
-            flangeStatus = "slender";
-        //web
-        if (beam.htw <= lambdap_web)
-            webStatus = "compact";
-        else if (beam.htw > lambdap_web && beam.htw < lambdar_web)
-            webStatus = "non-compact";
-        else
-            webStatus = "slender";
     }
+    //if unsymmetric, case 16
+    else
+    {
+        let num = (beam.hc/beam.hp)*Math.sqrt(E / beam.Fy);
+        let denom = Math.pow(0.54*Mp/My-0.09, 2);        
+        lambdar_web = 5.7*Math.sqrt(E/beam.Fy);
+        lambdap_web = Math.min(num/denom, lambdar_web);
+    }
+
+    //FLANGES 
+    //if built-up, Case 11
+    if (beam.isBU)
+    {
+        var FL = 0;
+        if (beam.isBU && !(beam.htw > lambdar_flange) && beam.Sxt/beam.Sxc <= 0.7)
+        {
+            FL = beam.Fy*beam.Sxt/beam.Sxc;
+            FL = Math.max(FL, 0.5*beam.Fy);
+        }     
+        else
+        {
+            FL = 0.7*beam.Fy;
+        }
+        console.log("FL: " + FL);
+        console.log("kc " + kc);
+        lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
+        lambdar_flange = 0.95 * Math.sqrt(kc*E / FL);
+    }
+    //if not built up, Case 10
+    else
+    {
+        lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
+        lambdar_flange =  Math.sqrt(E / beam.Fy);
+    }
+
+    //Sec F13 check
+    var limit = Math.max(18,  1.2*lambdar_flange)
+    if (beam.bf2tf > limit)
+    {
+            alert("Flange slenderness exceeds limits in Section F13");
+    }
+        
+
+    //clasify slenderness
+    if (beam.bf2tf <= lambdap_flange)
+        flangeStatus = "compact";
+    else if (beam.bf2tf > lambdap_flange && beam.bf2tf < lambdar_flange)
+        flangeStatus = "non-compact";
+    else
+        flangeStatus = "slender";
+    //web
+    if (beam.htw <= lambdap_web)
+        webStatus = "compact";
+    else if (beam.htw > lambdap_web && beam.htw < lambdar_web)
+        webStatus = "non-compact";
+    else
+        webStatus = "slender";
     beam.lambdap_flange = lambdap_flange;
     beam.lambdar_flange = lambdar_flange;
     beam.lambdap_web = lambdap_web;
     beam.lambdar_web = lambdar_web;
  
+    console.log("lambdap " + beam.lambdap_flange);
+    console.log("lambdar " + beam.lambdar_flange);
     var status =
     {
         flange: flangeStatus,
         web: webStatus,
         beam: beam
     }
-     console.log("testing beam status, lambda_p flange " + status.beam.lambdap_flange);
+    
     return status;
 }
 
-function getSlenderness_singlySymmetric(beam)
+function getSlenderness_new(beam)
 {
     const E = 29000.;
-    let lambdap_flange;
-    let lambdar_flange;
     let lambdap_web;
     let lambdar_web;
-    if (!beam.isSymmetric)
+    let lambdap_flange;
+    let lambdar_flange;
+    var Mp = beam.Z * beam.Fy;
+    var My = Math.min(beam.Sxc, beam.Sxt)*beam.Fy;
+    My = Math.min(My, Mp);
+
+    //FLANGES 
+    //if built-up, Case 11
+    var kc_temp = Math.min(0.76, Math.sqrt(4/beam.htw));
+    var kc = Math.max(kc_temp, 0.35);
+    if (beam.isBU)
     {
-        var Mp = beam.Z * beam.Fy;
         var My = Math.min(beam.Sxc, beam.Sxt)*beam.Fy;
-        var kc_temp = Math.max(0.76, 4/beam.htw);
-        var kc = Math.min(kc_temp, 0.35);
         lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
-        lambdar_flange = 0.95 * Math.sqrt(kc*E / beam.Fy);
-        let num = (beam.hc/beam.hp)*Math.sqrt(E / beam.Fy);
-        let denom = Math.pow(0.54*Mp/My-0.09, 2);        
-        lambdar_web = 5.7*Math.sqrt(E/beam.Fy);
-        lambdap_web = Math.min(num/denom, lambdar_web);
-        console.log("Flange lambdas: " + lambdap_flange + " and " + lambdar_flange);
-        console.log("Web lambdas: " +lambdap_web + " and " + lambdar_web);
-        console.log("Mp " + Mp);
-        console.log("My " + Mp);
-        if (beam.bf2tf <= lambdap_flange)
-            flangeStatus = "compact";
-        else if (beam.bf2tf > lambdap_flange && beam.bf2tf < lambdar_flange)
-            flangeStatus = "non-compact";
-        else
-            flangeStatus = "slender";
-        //web
-        if (beam.htw <= lambdap_web)
-            webStatus = "compact";
-        else if (beam.htw > lambdap_web && beam.htw < lambdar_web)
-            webStatus = "non-compact";
-        else
-            webStatus = "slender";
+        lambdar_flange = 1.14 * Math.sqrt(kc*E / beam.Fy);
     }
-    beam.lambdap_flange = lambdap_flange;
-    beam.lambdar_flange = lambdar_flange;
-    beam.lambdap_web = lambdap_web;
-    beam.lambdar_web = lambdar_web;
+    //if not built up, Case 10
+    else
+    {
+        lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
+        lambdar_flange =  Math.sqrt(E / beam.Fy);
+    }
+
+    //WEBS
+    //if symmetric, case 15
+    if (beam.isSymmetric)
+    {
+        lambdap_web = 3.76*Math.sqrt(E/beam.Fy);
+        var aw = beam.hc*beam.tw/(beam.bf_comp*beam.tf_comp);
+        var crw = 3.1 + 5/aw;      
+        lambdar_web = crw*Math.sqrt(E/beam.Fy);
+    }
+    //if unsymmetric, case 16
+    else
+    {
+        let num = (beam.hcy/beam.hp)*Math.sqrt(E / beam.Fy);
+        let denom = Math.pow(0.54*Mp/beam.Myc-0.09, 2); 
+        var aw = beam.hc*beam.tw/(beam.bf_comp*beam.tf_comp);
+        var crw = 3.1 + 5/aw;      
+        lambdar_web = crw*Math.sqrt(E/beam.Fy);
+        lambdap_web = Math.min(num/denom, lambdar_web);
+    }
+
+    if (beam.bf2tf <= lambdap_flange)
+        flangeStatus = "compact";
+    else if (beam.bf2tf > lambdap_flange && beam.bf2tf < lambdar_flange)
+        flangeStatus = "non-compact";
+    else
+        flangeStatus = "slender";
+    //web
+    if (beam.htw <= lambdap_web)
+        webStatus = "compact";
+    else if (beam.htw > lambdap_web && beam.htw < lambdar_web)
+        webStatus = "non-compact";
+    else
+        webStatus = "slender";
+    
+    beam.lambdap_flange_new = lambdap_flange;
+    beam.lambdar_flange_new = lambdar_flange;
+    beam.lambdap_web_new = lambdap_web;
+    beam.lambdar_web_new = lambdar_web;
+   
     var status =
     {
-        flange: flangeStatus,
-        web: webStatus,
+        flange_new: flangeStatus,
+        web_new: webStatus,
         beam: beam
     }
-    console.log("testing beam status, lambda_p flange " + status.beam.lambdap_flange);
+    console.log("testing beam status, lambda_r flange " + status.beam.lambdar_flange);
     return status;
 }
 
@@ -186,9 +265,6 @@ function phiMn_LTB(L, beam)
     else if(L > Lp && L < Lr)
         {
             MnLTB = Cb * (Mp - (Mp - 0.7 * beam.Fy * beam.Sxc) * (L - Lp) / (Lr - Lp));
-            console.log("Cb " + Cb);
-            console.log("Mp " + Mp);
-            console.log("Sxc " + beam.Sxc);
             MnLTB = Math.round(0.9*Math.min(MnLTB, Mp)/12);
             MnLTB = MnLTB + " (inelastic, Sec. F3)";
         }
@@ -219,13 +295,18 @@ function phiMn_FLB_2016(L, beam)
         kc = 0.35;
     else if (kc > 0.76)
         kc = 0.76
+
+    console.log("TEST 1 " + beam.lambdar_flange);
+    console.log("TEST 2 " + beam.bf2tf);
+
     if(beam.bf2tf > beam.lambdap_flange && beam.bf2tf < beam.lambdar_flange)
     {
         MnFLB = Mp - (Mp - 0.7 * beam.Fy * beam.Sx) * (beam.bf2tf - beam.lambdap_flange) / (beam.lambdar_flange - beam.lambdap_flange);        
         MnFLB = Math.round(0.9*MnFLB/12);
         MnFLB = MnFLB + " (Sec F3)";
+        console.log("MnFLB" + MnFLB);
     }
-    else if(beam.bf2tf > beam.lambdar_flange)
+    else if(beam.bf2tf >= beam.lambdar_flange)
     {
         MnFLB = 0.9*E*beam.Sx*kc/Math.pow(beam.bf2tf,2);
         MnFLB = Math.round(0.9*MnFLB/12);
@@ -241,9 +322,25 @@ function phiMn_FLB_new(L, beam)
     var Cb = 1;
     var E = 29000.;
     var Mp = beam.Z * beam.Fy;
-   
-    MnFLB = Mp - (Mp - 0.75 * beam.Fy * beam.Sx) * (beam.bf2tf - beam.lambdap_flange) / (beam.lambdar_flange - beam.lambdap_flange);        
-    MnFLB = Math.round(0.9*MnFLB/12);
+    let kc = 4/(Math.sqrt(beam.htw));
+    if (kc < 0.35)
+        kc = 0.35;
+    else if (kc > 0.76)
+        kc = 0.76
+    console.log("Following are vals for new FLB in F3");
+    console.log("lambdap: " + beam.lambdap_flange_new);
+    console.log("lambdar: " + beam.lambdar_flange_new);
+    if(beam.bf2tf > beam.lambdap_flange_new && beam.bf2tf < beam.lambdar_flange_new)
+    {
+        MnFLB = Mp - (Mp - 0.75 * beam.Fy * beam.Sx) * (beam.bf2tf - beam.lambdap_flange_new) / (beam.lambdar_flange_new - beam.lambdap_flange_new);        
+        MnFLB = Math.round(0.9*MnFLB/12);
+    }
+    else if(beam.bf2tf > beam.lambdar_flange_new)
+    {
+        MnFLB = 0.9*E*beam.Sx*kc/Math.pow(beam.bf2tf,2);
+        MnFLB = Math.round(0.9*MnFLB/12);
+        MnFLB = MnFLB;
+    }
     MnFLB = MnFLB + " (Sec F3)";
     
     return MnFLB;
@@ -253,10 +350,14 @@ function start()
 {
     var L=parseInt($('#flexL').val());
     var Fy=parseInt($('#Fy').val());
+    var E = 29000;
     var beamSize= $('#beamSize').val();
+    var status;
+    var status_new;
     if (beamSize === "BU")
     {
-        beam = {
+        beam = 
+        {
             Fy: Fy,
             d: parseFloat($('#depth').val()),
             tw: parseFloat($('#tw').val()),
@@ -269,20 +370,20 @@ function start()
         }
     
         if (beam.tf_comp === beam.tf_tens && beam.bf_comp === beam.bf_tens)
-                beam.isSymmetric= true
+            beam.isSymmetric= true
         beam.bf2tf= beam.bf_comp/(2*beam.tf_comp);
         beam.htw= (beam.d-beam.tf_comp-beam.tf_tens)/beam.tw;
+        if (beam.htw > 12*Math.sqrt(E/Fy) || beam.htw > 0.4*E/Fy)
+        {
+            alert("Web slenderness may exceed limits if Sec F3, depending on transverse stiffener spacing. See Sec. F13");
+        }
+    
         beam = getBUprops(beam);
-        if (beam.isSymmetric)
-        {
-            var status = getSlenderness(beam);
-            beam = status.beam;
-        }
-        else
-        {
-            var status = getSlenderness_singlySymmetric(beam);
-            beam = status.beam;
-        }
+        status = getSlenderness(beam);
+        beam = status.beam;
+        status_new = getSlenderness_new(beam);
+        beam = status_new.beam;
+        
     }
     else
     {
@@ -290,6 +391,7 @@ function start()
         {
             if (beamSize === Wshapes[i].Size) 
             {
+                var My = Fy*parseFloat(Wshapes[i].Sx);
                 beam = {
                     Fy: Fy,
                     tw: parseFloat(Wshapes[i].tw),
@@ -311,8 +413,14 @@ function start()
                 }
             }
         }
-        var status = getSlenderness(beam);
-  
+        status = getSlenderness(beam);
+        console.log("bf2tf " + beam.bf2tf)
+        beam = status.beam;
+        status_new = getSlenderness_new(beam);
+        beam = status_new.beam;
+        console.log(" What is lamdar_r for flanges? " + beam.lambdar_flange)
+        console.log("For the BU shape the flange vals are: " + beam.lambdap_flange + ", " + beam.lambdap_flange_new);
+        console.log("For the BU shape the web vals are: " + beam.lambdap_web + ", " + beam.lambdap_web_new);
     }
     
     var limitStates = 
@@ -326,18 +434,20 @@ function start()
         CFY_new: "N/A",
         TFY: "N/A"
     }
+    //************************
+    //**********2016**********
+    //************************
+
     //Section F2 and F3
     if (beam.isSymmetric && status.flange === 'compact' && status.web === 'compact')
     {
         limitStates.LTB= phiMn_LTB(L, beam);
-        limitStates.LTB_new = limitStates.LTB;
     }
     else if (beam.isSymmetric && status.web === 'compact' && (status.flange === 'non-compact' || status.flange === 'slender'))
     {
-        limitStates.LTB= phiMn_LTB(L, beam, '2016');
-        limitStates.LTB_new = limitStates.LTB;
+        limitStates.LTB= phiMn_LTB(L, beam);
         limitStates.FLB_2016 = phiMn_FLB_2016(L, beam);
-        limitStates.FLB_new = phiMn_FLB_new(L, beam);
+        console.log("CHECK " + limitStates.FLB_2016);
     }
     //Section F4 - NO ROLLED SHAPES FALL IN THIS SECTION BECAUSE ALL WEBS ARE COMPACT
     else if ( (beam.isSymmetric && status.web === 'non-compact') || (!beam.isSymmetric && status.web != 'slender') )
@@ -345,11 +455,8 @@ function start()
         //TODO: take out all these Ls if unnecessary
         console.log("Section F4 applies");
         limitStates.CFY = phiMn_CFY_F4(L, beam);
-        limitStates.CFY_new = limitStates.CFY;
-        limitStates.LTB = phiMn_LTB_F4(L, beam, '2016');
-        limitStates.LTB_new = phiMn_LTB_F4(L, beam, 'new');
-        limitStates.FLB_2016 = phiMn_FLB_F4(L, beam, '2016');
-        limitStates.FLB_new = phiMn_FLB_F4(L, beam, 'new');
+        limitStates.LTB = phiMn_LTB_F4(L, beam);
+        limitStates.FLB_2016 = phiMn_FLB_F4(L, beam);
         limitStates.TFY = phiMn_TFY(L, beam);
         console.log("CFY " + limitStates.CFY + "\nTFY: " + limitStates.TFY + "\nFLB: " + limitStates.FLB_2016);
         limitStates.phiMP = "N/A";
@@ -359,23 +466,58 @@ function start()
     {
         //TODO: take out all these Ls if unnecessary
         console.log("Section F5 applies");
-        limitStates.CFY = phiMn_CFY_F5(L, beam, '2016');  
-        limitStates.CFY_new = phiMn_CFY_F5(L, beam, 'new');  
-        limitStates.LTB = phiMn_LTB_F5(L, beam, '2016');
-        limitStates.LTB_new = phiMn_LTB_F5(L, beam, 'new');
+        limitStates.CFY = phiMn_CFY_F5(L, beam);  
+        limitStates.LTB = phiMn_LTB_F5(L, beam);
         limitStates.FLB_2016 = phiMn_FLB_F5(L, beam);
         limitStates.TFY = phiMn_TFY_F5(L, beam);
         console.log("CFY " + limitStates.CFY + "\nTFY: " + limitStates.TFY + "\nFLB: " + limitStates.FLB_2016);
         limitStates.phiMP = "N/A";
     }
-    console.log("CFY " + limitStates.CFY);
-    showTable(status, limitStates);
+
+
+    //************************
+    //**********Proposed**********
+    //************************
+    //Section F2 and F3
+    if (beam.isSymmetric && status_new.flange_new === 'compact' && status_new.web_new === 'compact')
+    {
+        limitStates.LTB_new = limitStates.LTB;
+    }
+    else if (beam.isSymmetric && status_new.web_new === 'compact' && (status_new.flange_new === 'non-compact' || status_new.flange_new === 'slender'))
+    {
+        limitStates.LTB_new = limitStates.LTB;
+        limitStates.FLB_new = phiMn_FLB_new(L, beam);
+    }
+    //Section F4 - NO ROLLED SHAPES FALL IN THIS SECTION BECAUSE ALL WEBS ARE COMPACT
+    else if ( (beam.isSymmetric && status_new.web_new === 'non-compact') || (!beam.isSymmetric && status_new.web_new != 'slender') )
+    {
+        //TODO: take out all these Ls if unnecessary
+        console.log("Section F4 applies");
+        limitStates.CFY_new = phiMn_CFY_F4_new(L, beam);
+        limitStates.LTB_new = phiMn_LTB_F4_new(L, beam);
+        limitStates.FLB_new = phiMn_FLB_F4_new(L, beam);
+        limitStates.phiMP = "N/A";
+    }
+    //Section F5
+    else if ( status_new.web_new === 'slender' )
+    {
+        //TODO: take out all these Ls if unnecessary
+        console.log("Section F5 applies");
+        limitStates.CFY_new = phiMn_CFY_F5_new(L, beam);  
+        limitStates.LTB_new = phiMn_LTB_F5_new(L, beam);
+        limitStates.FLB_new = phiMn_FLB_F5_new(L, beam);
+        limitStates.phiMP = "N/A";
+    }
+
+    showTable(status, status_new, limitStates);
 }
 
-function showTable(status, LS)
+function showTable(status, status_new, LS)
 {
     $('#flangeStatus').html(status.flange);
     $('#webStatus').html(status.web);
+    $('#flangeStatus_new').html(status_new.flange_new);
+    $('#webStatus_new').html(status_new.web_new);
     $('.yielding').html(LS.phiMP);
     $('#LTB').html(LS.LTB);
     $('#LTB_new').html(LS.LTB_new);
@@ -412,6 +554,7 @@ function getBUprops(beam)
     Iy = Iy + (1/12)*(beam.d-beam.tf_comp-beam.tf_tens)*Math.pow(beam.tw, 3);
     var ry = Math.sqrt(Iy/area);
     Iyc = (1/12)*beam.tf_comp*Math.pow(beam.bf_comp, 3);
+    console.log("Iyc " + Iyc);
 
     //plastic properties
     PNAlocation = "";
@@ -457,7 +600,27 @@ function getBUprops(beam)
     var c_tens = beam.d - NAfromCompFlange;
     var Sxc = Ix/NAfromCompFlange;
     var Sxt = Ix/c_tens;
+    var Myc = beam.Fy*Sxc;
     //var Zx = compFlangeArea*Math.abs(PNA-0.5*beam.tf_comp) + tensFlangeArea*Math.abs(beam.d-PNA-0.5*beam.tf_tens) + webArea*Math.abs(beam.tf_comp+0.5*clear_h-PNA);
+
+    //new F4 calcs
+    var Afc = beam.bf_comp*beam.tf_comp;
+    var Aft = beam.bf_tens*beam.tf_tens;  
+    var Awfc = 2*beam.tf_comp*beam.tw;
+    var h = beam.d - beam.tf_comp - beam.tf_tens;
+    var Aw = h*beam.tw;
+    var Dp = (beam.area-2*Afc)/(2*beam.tw);
+    var deltaA = Aft + Aw + Awfc - Afc;
+    var sqrtTerm = Math.pow(deltaA, 2) + 2*Afc*Awfc - Math.pow(Awfc, 2);
+    var dcy = ( deltaA + Math.sqrt(sqrtTerm) )/(4*beam.tw);
+    var Dcy = dcy - beam.tf_comp;
+    console.log("dcy " + dcy);
+    var hcy = 2*Dcy;
+    var term1 = (Afc/dcy)*(0.5*Dcy*beam.tf_comp + (1/3)*Math.pow(beam.tf_comp, 2));
+    var term2 = Aft*(h + 0.5*beam.tf_tens);
+    var term3 = (0.5*beam.tw)*(Math.pow(h, 2) - Math.pow(beam.tf_comp, 2) - (7/3)*Math.pow(dcy, 2) + 3*dcy*beam.tf_comp - (1/3)*Math.pow(Dcy, 3)/dcy);
+    var Myc_comm = beam.Fy*(term1+term2+term3);
+    console.log("MYC COMM " + Myc_comm);
 
     var newBeam =
     {
@@ -468,10 +631,11 @@ function getBUprops(beam)
         tf_tens: beam.tf_tens,
         tw: beam.tw,
         d: beam.d,
+        h: h,
         isBU: beam.isBU,
         isSymmetric: beam.isSymmetric,
         Ix: Ix,
-        Area: area,
+        area: area,
         hc: hc,
         hp: hp,
         Sxc: Sxc,
@@ -482,8 +646,17 @@ function getBUprops(beam)
         htw: beam.htw,
         J: 0, 
         ry: ry,
-        Iyc: Iyc
+        Iyc: Iyc,
+        Iy: Iy,
+        Dcy: Dcy,
+        dcy: dcy,
+        hcy: hcy,
+        Aft: Aft,
+        Afc: Afc,
+        Myc_dist: Myc_comm,
+        Myc: Myc 
     }
+    newBeam.My = beam.Fy*Math.min(Sxc, Sxt);
     console.log("Z " + newBeam.Z);
     console.log("ry " + ry);
     console.log("Ix again: " + newBeam.Ix);
