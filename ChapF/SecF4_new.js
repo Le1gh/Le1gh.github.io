@@ -107,7 +107,6 @@ function phiMn_FLB_F4_new(L, beam)
 function getF4Vals_new(beam) 
 {
     console.log("Myc_dist " + beam.Myc_dist);
-    var aw = beam.hc*beam.tw/(beam.bf_comp*beam.tf_comp);
     var denom = 12*(1+beam.hc*beam.tw/(6*beam.bf_comp*beam.tf_comp));
     var rt = beam.bf_comp/Math.sqrt(denom);
     console.log("F4 new, hc is " + beam.hc);

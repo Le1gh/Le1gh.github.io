@@ -58,7 +58,6 @@ function phiMn_CFY_F4(L, beam)
     var Mp = beam.Fy*beam.Z;
     var res = getF4Vals(beam);
 
-    //this is using the User Note
     var phiMn_compFlangeYielding = Math.round(0.9*res.Rpc*beam.Myc/12);
     phiMn_compFlangeYielding + " (Sec F4 with User Note)\n";
 

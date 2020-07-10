@@ -62,7 +62,7 @@ function getSlenderness(beam)
     var Mp = beam.Z * beam.Fy;
     var My = Math.min(beam.Sxc, beam.Sxt)*beam.Fy;
     My = Math.min(My, Mp);
-    var kc_temp = Math.min(0.76, 4/Math.sqrt(beam.htw));
+    var kc_temp = Math.min(0.76, 4/Math.sqrt(beam.htw_new));
     var kc = Math.max(kc_temp, 0.35);
     console.log("Mp: " + Mp);
     console.log("beam.htw " + beam.htw);
@@ -150,6 +150,8 @@ function getSlenderness(beam)
 
 function getSlenderness_new(beam)
 {
+    console.log("old beam htw: " + beam.htw);
+    console.log("new beam htw: " + beam.htw_new);
     const E = 29000.;
     let lambdap_web;
     let lambdar_web;
@@ -161,11 +163,10 @@ function getSlenderness_new(beam)
 
     //FLANGES 
     //if built-up, Case 11
-    var kc_temp = Math.min(0.76, Math.sqrt(4/beam.htw));
+    var kc_temp = Math.min(0.76, 4/Math.sqrt(beam.htw));
     var kc = Math.max(kc_temp, 0.35);
     if (beam.isBU)
     {
-        var My = Math.min(beam.Sxc, beam.Sxt)*beam.Fy;
         lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
         lambdar_flange = 1.14 * Math.sqrt(kc*E / beam.Fy);
     }
@@ -202,13 +203,28 @@ function getSlenderness_new(beam)
         flangeStatus = "non-compact";
     else
         flangeStatus = "slender";
+
     //web
-    if (beam.htw <= lambdap_web)
-        webStatus = "compact";
-    else if (beam.htw > lambdap_web && beam.htw < lambdar_web)
-        webStatus = "non-compact";
+    if (beam.isSymmetric)
+    {
+         if (beam.htw <= lambdap_web)
+            webStatus = "compact";
+        else if (beam.htw > lambdap_web && beam.htw < lambdar_web)
+            webStatus = "non-compact";
+        else
+            webStatus = "slender";
+    }
     else
-        webStatus = "slender";
+    {
+        if (beam.htw_new <= lambdap_web)
+            webStatus = "compact";
+        else if (beam.htw_new > lambdap_web && beam.htw_new < lambdar_web)
+            webStatus = "non-compact";
+        else
+            webStatus = "slender";
+
+    }
+ 
     
     beam.lambdap_flange_new = lambdap_flange;
     beam.lambdar_flange_new = lambdar_flange;
@@ -327,9 +343,7 @@ function phiMn_FLB_new(L, beam)
         kc = 0.35;
     else if (kc > 0.76)
         kc = 0.76
-    console.log("Following are vals for new FLB in F3");
-    console.log("lambdap: " + beam.lambdap_flange_new);
-    console.log("lambdar: " + beam.lambdar_flange_new);
+
     if(beam.bf2tf > beam.lambdap_flange_new && beam.bf2tf < beam.lambdar_flange_new)
     {
         MnFLB = Mp - (Mp - 0.75 * beam.Fy * beam.Sx) * (beam.bf2tf - beam.lambdap_flange_new) / (beam.lambdar_flange_new - beam.lambdap_flange_new);        
@@ -418,9 +432,6 @@ function start()
         beam = status.beam;
         status_new = getSlenderness_new(beam);
         beam = status_new.beam;
-        console.log(" What is lamdar_r for flanges? " + beam.lambdar_flange)
-        console.log("For the BU shape the flange vals are: " + beam.lambdap_flange + ", " + beam.lambdap_flange_new);
-        console.log("For the BU shape the web vals are: " + beam.lambdap_web + ", " + beam.lambdap_web_new);
     }
     
     var limitStates = 
@@ -620,6 +631,7 @@ function getBUprops(beam)
     var term2 = Aft*(h + 0.5*beam.tf_tens);
     var term3 = (0.5*beam.tw)*(Math.pow(h, 2) - Math.pow(beam.tf_comp, 2) - (7/3)*Math.pow(dcy, 2) + 3*dcy*beam.tf_comp - (1/3)*Math.pow(Dcy, 3)/dcy);
     var Myc_comm = beam.Fy*(term1+term2+term3);
+    var htw_new = hcy/beam.tw;
     console.log("MYC COMM " + Myc_comm);
 
     var newBeam =
@@ -654,7 +666,8 @@ function getBUprops(beam)
         Aft: Aft,
         Afc: Afc,
         Myc_dist: Myc_comm,
-        Myc: Myc 
+        Myc: Myc,
+        htw_new: htw_new 
     }
     newBeam.My = beam.Fy*Math.min(Sxc, Sxt);
     console.log("Z " + newBeam.Z);
