@@ -470,7 +470,6 @@ function start()
         limitStates.FLB_2016 = phiMn_FLB_F4(L, beam);
         limitStates.TFY = phiMn_TFY(L, beam);
         console.log("CFY " + limitStates.CFY + "\nTFY: " + limitStates.TFY + "\nFLB: " + limitStates.FLB_2016);
-        limitStates.phiMP = "N/A";
     }
     //Section F5
     else if ( status.web === 'slender' )
@@ -482,7 +481,6 @@ function start()
         limitStates.FLB_2016 = phiMn_FLB_F5(L, beam);
         limitStates.TFY = phiMn_TFY_F5(L, beam);
         console.log("CFY " + limitStates.CFY + "\nTFY: " + limitStates.TFY + "\nFLB: " + limitStates.FLB_2016);
-        limitStates.phiMP = "N/A";
     }
 
 
@@ -507,7 +505,6 @@ function start()
         limitStates.CFY_new = phiMn_CFY_F4_new(L, beam);
         limitStates.LTB_new = phiMn_LTB_F4_new(L, beam);
         limitStates.FLB_new = phiMn_FLB_F4_new(L, beam);
-        limitStates.phiMP = "N/A";
     }
     //Section F5
     else if ( status_new.web_new === 'slender' )
@@ -517,7 +514,6 @@ function start()
         limitStates.CFY_new = phiMn_CFY_F5_new(L, beam);  
         limitStates.LTB_new = phiMn_LTB_F5_new(L, beam);
         limitStates.FLB_new = phiMn_FLB_F5_new(L, beam);
-        limitStates.phiMP = "N/A";
     }
 
     showTable(status, status_new, limitStates);
