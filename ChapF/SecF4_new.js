@@ -4,8 +4,7 @@ function phiMn_LTB_F4_new(L, beam)
     var Cb = 1;
     var E = 29000.;
 
-	var MnLTB;
-    var MnLTB_new;
+    var MnLTB_new = "N/A";
     var h0 = 0;
     var Lr = 0;
     var res = getF4Vals_new(beam);
@@ -80,9 +79,9 @@ function phiMn_CFY_F4_new(L, beam)
         phiMn = res.Rpc*beam.Myc_dist;
     }
 
-    var phiMn_Commentary = Math.round(0.9*phiMn/12);
-    phiMn_Commentary += " (Sec F4)";
-    return phiMn_Commentary;
+    var phiMn = Math.round(0.9*phiMn/12);
+    phiMn += " (Sec F4)";
+    return phiMn;
 }
 
 function phiMn_FLB_F4_new(L, beam)
@@ -93,14 +92,12 @@ function phiMn_FLB_F4_new(L, beam)
     //new
     if (beam.bf2tf < beam.lambdar_flange_new && beam.bf2tf > beam.lambdap_flange_new)
     {
-        Mn_FLB_F4_new = (0.9/12)*res.Rpc*beam.Myc_dist - (res.Rpc*beam.Myc_dist - 0.75*beam.Myc_dist)*(beam.bf2tf - beam.lambdap_flange_new)/(beam.lambdar_flange_new - beam.lambdap_flange_new);
-        Mn_FLB_F4_new= Math.round(Mn_FLB_F4_new);
-        Mn_FLB_F4_new = Mn_FLB_F4_new + " (Sec F4)";
-
-        Mn_FLB_F4_new = (0.9/12)*res.Rpc*beam.Myc_dist- (res.Rpc*beam.Myc_dist - 0.75*beam.Myc_dist)*(beam.bf2tf - beam.lambdap_flange_new)/(beam.lambdar_flange_new - beam.lambdap_flange_new);
-        Mn_FLB_F4_new= Math.round(Mn_FLB_F4_new);
+        Mn_FLB_F4_new = res.Rpc*beam.Myc_dist - (res.Rpc*beam.Myc_dist - 0.75*beam.Myc_dist)*(beam.bf2tf - beam.lambdap_flange_new)/(beam.lambdar_flange_new - beam.lambdap_flange_new);
+        Mn_FLB_F4_new = (0.9/12) * Mn_FLB_F4_new;
+        Mn_FLB_F4_new = Math.round(Mn_FLB_F4_new);
         Mn_FLB_F4_new = Mn_FLB_F4_new + " (Sec F4)";
     }
+    console.log("F4 to log: " + res.Rpc + " " + beam.bf2tf + " " + beam.lambdap_flange_new + " " + beam.lambdar_flange_new)
    return Mn_FLB_F4_new;
 }
 

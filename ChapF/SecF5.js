@@ -72,7 +72,7 @@ function phiMn_FLB_F5(L, beam)
     else if (beam.bf2tf > beam.lambdar_flange)
     {
         console.log("inside Comp FLB check with slender flanges in F5");
-        Fcr = (0.9/12)*0.9*E*kc/Math.pow(beam.bf2tf,2);
+        Fcr = 0.9*E*kc/Math.pow(beam.bf2tf,2);
         Mn_FLB_F5 = Math.round((0.9/12)*Fcr*res.Rpg*beam.Sxc);
         Mn_FLB_F5 = Mn_FLB_F5 + " (Sec F5)";
     }
