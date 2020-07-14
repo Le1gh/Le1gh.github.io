@@ -107,7 +107,8 @@ function getSlenderness(beam)
     {
         lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
         lambdar_flange =  Math.sqrt(E / beam.Fy);
-    }     
+    }
+
 
     //clasify slenderness
     if (beam.bf2tf <= lambdap_flange)
@@ -410,6 +411,7 @@ function start()
             var footnote= document.getElementById('footnote');
             var tag = document.createElement("h2");
             var text = document.createTextNode("NOTE: Web slenderness may exceed limits in Sec F13 of the proposal, depending on transverse stiffener spacing. See Sec. F13");
+
             tag.appendChild(text);
             footnote.appendChild(tag);
          }
