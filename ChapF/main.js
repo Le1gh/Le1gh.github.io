@@ -107,15 +107,7 @@ function getSlenderness(beam)
     {
         lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
         lambdar_flange =  Math.sqrt(E / beam.Fy);
-    }
-
-    //Sec F13 check
-    var limit = Math.max(18,  1.2*lambdar_flange)
-    if (beam.bf2tf > limit)
-    {
-            alert("Flange slenderness exceeds limits in Section F13");
-    }
-        
+    }     
 
     //clasify slenderness
     if (beam.bf2tf <= lambdap_flange)
@@ -195,6 +187,18 @@ function getSlenderness_new(beam)
         var crw = 3.1 + 5/aw;      
         lambdar_web = crw*Math.sqrt(E/beam.Fy);
         lambdap_web = Math.min(num/denom, lambdar_web);
+    }
+
+    //Sec F13 check
+    var limit = Math.max(18,  1.2*lambdar_flange)
+   
+    if (beam.bf2tf > limit)
+    {
+        var footnote= document.getElementById('footnote');
+        var tag = document.createElement("h2");
+        var text = document.createTextNode("NOTE: Flange slenderness exceeds limits in Section F13 of the proposal.");
+        tag.appendChild(text);
+        footnote.appendChild(tag);
     }
 
     if (beam.bf2tf <= lambdap_flange)
@@ -403,8 +407,12 @@ function start()
         beam.htw= (beam.d-beam.tf_comp-beam.tf_tens)/beam.tw;
         if (beam.htw > 12*Math.sqrt(E/Fy) || beam.htw > 0.4*E/Fy)
         {
-            alert("Web slenderness may exceed limits if Sec F3, depending on transverse stiffener spacing. See Sec. F13");
-        }
+            var footnote= document.getElementById('footnote');
+            var tag = document.createElement("h2");
+            var text = document.createTextNode("NOTE: Web slenderness may exceed limits in Sec F13 of the proposal, depending on transverse stiffener spacing. See Sec. F13");
+            tag.appendChild(text);
+            footnote.appendChild(tag);
+         }
     
         beam = getBUprops(beam);
         status = getSlenderness(beam);
@@ -456,6 +464,7 @@ function start()
         FLB_2016: "N/A",
         FLB_new: "N/A",
         phiMP: Math.round(0.9*beam.Z*beam.Fy/12),
+        phiMP_new: Math.round(0.9*beam.Z*beam.Fy/12),
         CFY: "N/A",
         CFY_new: "N/A",
         TFY: "N/A"
@@ -479,7 +488,7 @@ function start()
     //************************
     //**********2016**********
     //************************
-
+ 
     //Section F2 and F3
     if (beam.isSymmetric && status.flange === 'compact' && status.web === 'compact')
     {
@@ -488,6 +497,8 @@ function start()
         intermedVals.Lp = lens.Lp;
         intermedVals.Lr = lens.Lr;
     }
+
+
     else if (beam.isSymmetric && status.web === 'compact' && (status.flange === 'non-compact' || status.flange === 'slender'))
     {
         limitStates.LTB= phiMn_LTB(L, beam, false);
@@ -530,8 +541,20 @@ function start()
     //************************
     //**********Proposed**********
     //************************
+    var limitExceeded = false;
+    var limit = Math.max(18,  1.2*beam.lambdar_flange_new)
+    if (beam.htw > 12*Math.sqrt(E/Fy) || beam.htw > 0.4*E/Fy)
+    {
+        limitStates.phiMP_new = "N/A";
+        limitExceeded = true;
+    }
+    else if (beam.bf2tf > limit)
+    {
+        limitStates.phiMP_new = "N/A";
+        limitExceeded = true;
+    }
     //Section F2 and F3
-    if (beam.isSymmetric && status_new.flange_new === 'compact' && status_new.web_new === 'compact')
+    else if (beam.isSymmetric && status_new.flange_new === 'compact' && status_new.web_new === 'compact')
     {
         limitStates.LTB_new = limitStates.LTB;
         intermedVals.Lr_new =  intermedVals.Lr;
@@ -569,32 +592,51 @@ function start()
         limitStates.FLB_new = phiMn_FLB_F5_new(L, beam);
     }
 
-    showTable(status, status_new, limitStates, intermedVals, beam);
+    showTable(status, status_new, limitStates, intermedVals, beam, limitExceeded);
 }
 
-function showTable(status, status_new, LS, IV, beam)
+function showTable(status, status_new, LS, IV, beam, limitExceeded)
 {
     //round beam values
     var Sxc = Math.round(beam.Sxc*10)/10;
     var Sxt = Math.round(beam.Sxt*10)/10;
+    var Sxc_new = Sxc;
+    var Sxt_new = Sxt;
     var My = Math.round(beam.My*10)/10;
+    var My_new = My;
     var Myc = "N/A";
     var Myc_new = "N/A";
     var hc = "N/A";
+    var hc_new = "N/A";
     var hcy = "N/A";
     var hcy_new = "N/A";
     if (beam.isBU)
     {
         hc = Math.round(beam.hc*10)/10;
+        hc_new = hc;
         hcy_new = Math.round(beam.hcy*10)/10;
         Myc_new = Math.round(beam.Myc_dist*10)/10;
     }
+
+    if (limitExceeded)
+    {
+        Sxc_new = "N/A";
+        Sxt_new = "N/A";
+        My_new = "N/A";
+        hcy_new = "N/A";
+        hc_new = "N/A";
+        Myc_new = "N/A";
+        IV.Lp_new = "N/A";
+        IV.Lr_new = "N/A";
+    }
+    
     //populate HTML  
     $('#flangeStatus').html(status.flange);
     $('#webStatus').html(status.web);
     $('#flangeStatus_new').html(status_new.flange_new);
     $('#webStatus_new').html(status_new.web_new);
-    $('.yielding').html(LS.phiMP);
+    $('#yielding').html(LS.phiMP);
+    $('#yielding_new').html(LS.phiMP_new);
     $('#LTB').html(LS.LTB);
     $('#LTB_new').html(LS.LTB_new);
     $('#FLB_2016').html(LS.FLB_2016);
@@ -610,17 +652,17 @@ function showTable(status, status_new, LS, IV, beam)
     $('#Lr_new').html(IV.Lr_new);
 
     $('#My').html(My);
-     $('#My_new').html(My);
+    $('#My_new').html(My_new);
     $('#Myc').html(Myc);
     $('#Myc_new').html(Myc_new);
     $('#hc').html(hc);
-    $('#hc_new').html(hc);
+    $('#hc_new').html(hc_new);
     $('#hcy').html(hcy);
-     $('#hcy_new').html(hcy_new);
+    $('#hcy_new').html(hcy_new);
     $('#Sxc').html(Sxc);
     $('#Sxt').html(Sxt);
-    $('#Sxc_new').html(Sxc);
-    $('#Sxt_new').html(Sxt);
+    $('#Sxc_new').html(Sxc_new);
+    $('#Sxt_new').html(Sxt_new);
 
     //$('#runFunc').hide();
     //$('#startAgainBtn').show();
@@ -748,7 +790,6 @@ function getBUprops(beam)
         My: My,
         htw_new: htw_new 
     }
-    newBeam.My = beam.Fy*Math.min(Sxc, Sxt);
 
     return newBeam;
 }
