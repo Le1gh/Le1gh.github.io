@@ -73,6 +73,7 @@ function phiMn_FLB_F5(L, beam)
 {
     var Mn_FLB_F5 = "N/A";
     var Fcr = 0;
+    var E = 29000;
     var res = getF5Vals(beam);
     let kc = 4/(Math.sqrt(beam.htw));
    

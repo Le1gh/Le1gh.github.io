@@ -111,9 +111,17 @@ function getSlenderness(beam)
 
     //Sec F13 check
     var limit = Math.max(18,  1.2*lambdar_flange)
+    console.log("entering");
+    console.log("beam is " + beam.bf2tf);
+        console.log("limit is " + limit);
     if (beam.bf2tf > limit)
     {
-            alert("Flange slenderness exceeds limits in Section F13");
+
+        var footnote= document.getElementById('footnote');
+        var tag = document.createElement("h2");
+        var text = document.createTextNode("NOTE: Flange slenderness exceeds limits in Section F13");
+        tag.appendChild(text);
+        footnote.appendChild(tag);
     }
         
 
@@ -403,8 +411,12 @@ function start()
         beam.htw= (beam.d-beam.tf_comp-beam.tf_tens)/beam.tw;
         if (beam.htw > 12*Math.sqrt(E/Fy) || beam.htw > 0.4*E/Fy)
         {
-            alert("Web slenderness may exceed limits if Sec F3, depending on transverse stiffener spacing. See Sec. F13");
-        }
+            var footnote= document.getElementById('footnote');
+            var tag = document.createElement("h2");
+            var text = document.createTextNode("NOTE: Web slenderness may exceed limits of Sec F13, depending on transverse stiffener spacing. See Sec. F13");
+            tag.appendChild(text);
+            footnote.appendChild(tag);
+         }
     
         beam = getBUprops(beam);
         status = getSlenderness(beam);
