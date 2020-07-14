@@ -1,4 +1,4 @@
-function phiMn_LTB_F4_new(L, beam)
+function phiMn_LTB_F4_new(L, beam, getLs)
 {
     //assuming this applies only to BU
     var Cb = 1;
@@ -30,12 +30,6 @@ function phiMn_LTB_F4_new(L, beam)
     
     var Lp = (1. / 12) * 1.1 * res.rt * Math.sqrt(E / beam.Fy);
     
-    console.log("F4 new Lr is " + Lr_new);
-    console.log("F4 new Lp is " + Lp);
-    console.log("F4 new My " + My);
-    console.log("F4 Myc_dist " + beam.Myc_dist);
-    console.log("F4 Myc with Sxc " + beam.Sxc*beam.Fy);
-    console.log("F4 Myt with Sxt " + beam.Sxt*beam.Fy);
 
     if (L > Lp && L < Lr_new)
     {
@@ -54,8 +48,24 @@ function phiMn_LTB_F4_new(L, beam)
         MnLTB_new = MnLTB_new + " (elastic, Sec. F4)";
     }
 
-
-    return MnLTB_new;   
+    console.log("Lr is " + Lr_new);
+    Lr_new = Math.round(Lr_new*10)/10;
+    console.log("Lr_new is " + Lr_new);
+    console.log("Lp is " + Lp);
+    Lp = Math.round(Lp*10)/10;
+    console.log("Lp is " + Lp);
+    if (getLs)
+    {
+        var lengths = {
+            Lp: Lp,
+            Lr: Lr_new
+        }
+        return lengths;
+    }
+    else
+    {    
+        return MnLTB_new;
+    }
 }
 
 function phiMn_CFY_F4_new(L, beam)

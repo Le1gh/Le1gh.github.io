@@ -1,4 +1,4 @@
-function phiMn_LTB_F5(L, beam, version)
+function phiMn_LTB_F5(L, beam, getLs)
 {
     //assuming this applies only to BU
     var Cb = 1;
@@ -35,7 +35,25 @@ function phiMn_LTB_F5(L, beam, version)
 
         }
 
-        return MnLTB;   
+    console.log("Lr is " + Lr);
+    Lr = Math.round(Lr*10)/10;
+    console.log("Lr is " + Lr);
+    console.log("Lp is " + Lp);
+    Lp = Math.round(Lp*10)/10;
+    console.log("Lp is " + Lp);
+
+    if (getLs)
+    {
+        var lengths = {
+            Lp: Lp,
+            Lr: Lr
+        }
+        return lengths;
+    }
+    else
+    {    
+        return MnLTB;
+    }
 }
 
 function phiMn_CFY_F5(L, beam)

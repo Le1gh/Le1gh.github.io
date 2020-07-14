@@ -1,4 +1,4 @@
-function phiMn_LTB_F4(L, beam)
+function phiMn_LTB_F4(L, beam, getLs)
 {
     //assuming this applies only to BU
     var Cb = 1;
@@ -46,11 +46,26 @@ function phiMn_LTB_F4(L, beam)
             MnLTB_new = MnLTB;
 		}
 
+    console.log("Lr is " + Lr);
+    Lr = Math.round(Lr*10)/10;
+    console.log("Lr is " + Lr);
+    console.log("Lp is " + Lp);
+    Lp = Math.round(Lp*10)/10;
+    console.log("Lp is " + Lp);
 
-    console.log("MnLTB F4 is " + MnLTB);
-    console.log("Lp " + Lp);
-    console.log("Lr " + Lr);
-    return MnLTB;   
+    if (getLs)
+    {
+        var lengths = {
+            Lp: Lp,
+            Lr: Lr
+        }
+        return lengths;
+    }
+    else
+    {    
+        return MnLTB;
+    }
+ 
 }
 
 function phiMn_CFY_F4(L, beam)

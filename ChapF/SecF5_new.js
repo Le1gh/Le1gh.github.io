@@ -1,4 +1,4 @@
-function phiMn_LTB_F5_new(L, beam)
+function phiMn_LTB_F5_new(L, beam, getLs)
 {
     //assuming this applies only to BU
     var Cb = 1;
@@ -27,7 +27,26 @@ function phiMn_LTB_F5_new(L, beam)
         MnLTB_new = Math.round(.9*MnLTB_new/12);
         MnLTB_new = MnLTB_new + " (elastic, Sec. F5)";
     }
-    return MnLTB_new;
+        
+
+    console.log("Lr is " + Lr);
+    Lr = Math.round(Lr*10)/10;
+    console.log("Lr is " + Lr);
+    console.log("Lp is " + Lp);
+    Lp = Math.round(Lp*10)/10;
+    console.log("Lp is " + Lp);
+    if (getLs)
+    {
+        var lengths = {
+            Lp: Lp,
+            Lr: Lr
+        }
+        return lengths;
+    }
+    else
+    {    
+        return MnLTB_new;
+    }
 }
 
 function phiMn_FLB_F5_new(L, beam)
