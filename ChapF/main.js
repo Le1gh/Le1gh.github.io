@@ -297,12 +297,9 @@ function phiMn_LTB(L, beam, getLs)
             MnLTB = MnLTB + " (elastic, Sec. F3)";
 		}
 
-    console.log("Lr is " + Lr);
     Lr = Math.round(Lr*10)/10;
-    console.log("Lr is " + Lr);
-    console.log("Lp is " + Lp);
     Lp = Math.round(Lp*10)/10;
-    console.log("Lp is " + Lp);
+
     if (getLs)
     {
         var lengths = {
@@ -331,8 +328,6 @@ function phiMn_FLB_2016(L, beam)
     else if (kc > 0.76)
         kc = 0.76
 
-    console.log("TEST 1 " + beam.lambdar_flange);
-    console.log("TEST 2 " + beam.bf2tf);
 
     if(beam.bf2tf > beam.lambdap_flange && beam.bf2tf < beam.lambdar_flange)
     {
@@ -611,6 +606,8 @@ function showTable(status, status_new, LS, IV, beam, limitExceeded)
     var hc_new = "N/A";
     var hcy = "N/A";
     var hcy_new = "N/A";
+    var htw_2016 = Math.round(beam.htw*100)/100;
+    var htw_new = Math.round(beam.htw_new*100)/100;
     var lpFlange = Math.round(beam.lambdap_flange*100)/100;
     var lrFlange = Math.round(beam.lambdar_flange*100)/100;
     var lpFlangeNew = Math.round(beam.lambdap_flange_new*100)/100;
@@ -665,11 +662,12 @@ function showTable(status, status_new, LS, IV, beam, limitExceeded)
     $('#flange_lambda_p_new').html(lpFlangeNew);
     $('#flange_lambda_r').html(lrFlange);
     $('#flange_lambda_r_new').html(lrFlangeNew);
-
     $('#web_lambda_p').html(lpWeb);
     $('#web_lambda_p_new').html(lpWebNew);
     $('#web_lambda_r').html(lrWeb);
     $('#web_lambda_r_new').html(lrWebNew);
+    $('#htw_2016').html(htw_2016);
+    $('#htw_new').html(htw_new);
 
     $('#My').html(My);
     $('#My_new').html(My_new);
