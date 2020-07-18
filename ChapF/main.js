@@ -625,8 +625,11 @@ function showTable(status, status_new, LS, IV, beam, limitExceeded)
     {
         hc = Math.round(beam.hc*10)/10;
         hc_new = hc;
-        hcy_new = Math.round(beam.hcy*10)/10;
-        Myc_new = Math.round(beam.Myc_dist*10)/10;
+        if (!beam.isSymmetric)
+        {
+            hcy_new = Math.round(beam.hcy*10)/10;
+            Myc_new = Math.round(beam.Myc_dist*10)/10;
+        }
     }
 
     if (limitExceeded)
@@ -769,16 +772,18 @@ function getBUprops(beam)
     var Dcy = dcy - beam.tf_comp;
     console.log("dcy " + dcy);
     var hcy = 2*Dcy;
+    var htw_new = hcy/beam.tw;
     if (beam.isSymmetric)
     {
         hcy = "N/A";
+        htw_new = beam.htw;
     }
     var term1 = (Afc/dcy)*(0.5*Dcy*beam.tf_comp + (1/3)*Math.pow(beam.tf_comp, 2));
     var term2 = Aft*(h + 0.5*beam.tf_tens);
     var term3 = (0.5*beam.tw)*(Math.pow(h, 2) - Math.pow(beam.tf_comp, 2) - (7/3)*Math.pow(dcy, 2) + 3*dcy*beam.tf_comp - (1/3)*Math.pow(Dcy, 3)/dcy);
     var Myc_comm = beam.Fy*(term1+term2+term3);
     var My = beam.Fy*Math.min(Sxc, Sxt);
-    var htw_new = hcy/beam.tw;
+    
     console.log("MYC COMM " + Myc_comm);
 
     var newBeam =
