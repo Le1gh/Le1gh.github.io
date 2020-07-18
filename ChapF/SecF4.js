@@ -46,12 +46,8 @@ function phiMn_LTB_F4(L, beam, getLs)
             MnLTB_new = MnLTB;
 		}
 
-    console.log("Lr is " + Lr);
     Lr = Math.round(Lr*10)/10;
-    console.log("Lr is " + Lr);
-    console.log("Lp is " + Lp);
     Lp = Math.round(Lp*10)/10;
-    console.log("Lp is " + Lp);
 
     if (getLs)
     {
