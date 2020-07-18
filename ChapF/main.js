@@ -88,7 +88,7 @@ function getSlenderness(beam)
     if (beam.isBU)
     {
         var FL = 0;
-        if ( (beam.htw > lambdar_web) || beam.Sxt/beam.Sxc <= 0.7)
+        if ( (beam.htw > lambdar_web) || beam.Sxt/beam.Sxc >= 0.7)
         {
             FL = 0.7*beam.Fy;
         }     
@@ -101,6 +101,7 @@ function getSlenderness(beam)
         console.log("kc " + kc);
         lambdap_flange = 0.38 * Math.sqrt(E / beam.Fy);
         lambdar_flange = 0.95 * Math.sqrt(kc*E / FL);
+        console.log("LAMBDA FLANGE " + lambdar_flange);
     }
     //if not built up, Case 10
     else
@@ -329,7 +330,7 @@ function phiMn_FLB_2016(L, beam)
     else if (kc > 0.76)
         kc = 0.76
 
-
+  
     if(beam.bf2tf > beam.lambdap_flange && beam.bf2tf < beam.lambdar_flange)
     {
         MnFLB = Mp - (Mp - 0.7 * beam.Fy * beam.Sx) * (beam.bf2tf - beam.lambdap_flange) / (beam.lambdar_flange - beam.lambdap_flange);        
@@ -344,6 +345,7 @@ function phiMn_FLB_2016(L, beam)
         MnFLB = MnFLB + " (Sec F3)";
     }
 
+    console.log("VALS TO CHECK " + kc + " " + beam.Sx + " " + MnFLB);
     return MnFLB;
 }
 
@@ -767,6 +769,10 @@ function getBUprops(beam)
     var Dcy = dcy - beam.tf_comp;
     console.log("dcy " + dcy);
     var hcy = 2*Dcy;
+    if (beam.isSymmetric)
+    {
+        hcy = "N/A";
+    }
     var term1 = (Afc/dcy)*(0.5*Dcy*beam.tf_comp + (1/3)*Math.pow(beam.tf_comp, 2));
     var term2 = Aft*(h + 0.5*beam.tf_tens);
     var term3 = (0.5*beam.tw)*(Math.pow(h, 2) - Math.pow(beam.tf_comp, 2) - (7/3)*Math.pow(dcy, 2) + 3*dcy*beam.tf_comp - (1/3)*Math.pow(Dcy, 3)/dcy);
