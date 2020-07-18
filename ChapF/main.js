@@ -62,7 +62,7 @@ function getSlenderness(beam)
     var Mp = beam.Z * beam.Fy;
     var My = Math.min(beam.Sxc, beam.Sxt)*beam.Fy;
     My = Math.min(My, Mp);
-    var kc_temp = Math.min(0.76, 4/Math.sqrt(beam.htw_new));
+    var kc_temp = Math.min(0.76, 4/Math.sqrt(beam.htw));
     var kc = Math.max(kc_temp, 0.35);
     console.log("Mp: " + Mp);
     console.log("beam.htw " + beam.htw);
@@ -88,14 +88,14 @@ function getSlenderness(beam)
     if (beam.isBU)
     {
         var FL = 0;
-        if (beam.isBU && !(beam.htw > lambdar_flange) && beam.Sxt/beam.Sxc <= 0.7)
+        if ( (beam.htw > lambdar_web) || beam.Sxt/beam.Sxc <= 0.7)
         {
-            FL = beam.Fy*beam.Sxt/beam.Sxc;
-            FL = Math.max(FL, 0.5*beam.Fy);
+            FL = 0.7*beam.Fy;
         }     
         else
         {
-            FL = 0.7*beam.Fy;
+            FL = beam.Fy*beam.Sxt/beam.Sxc;
+            FL = Math.max(FL, 0.5*beam.Fy);
         }
         console.log("FL: " + FL);
         console.log("kc " + kc);
@@ -183,11 +183,12 @@ function getSlenderness_new(beam)
     else
     {
         let num = (beam.hcy/beam.hp)*Math.sqrt(E / beam.Fy);
-        let denom = Math.pow(0.54*Mp/beam.Myc-0.09, 2); 
+        let denom = Math.pow(0.54*Mp/beam.Myc_dist-0.09, 2); 
         var aw = beam.hc*beam.tw/(beam.bf_comp*beam.tf_comp);
         var crw = 3.1 + 5/aw;      
         lambdar_web = crw*Math.sqrt(E/beam.Fy);
         lambdap_web = Math.min(num/denom, lambdar_web);
+        console.log("THIS SHOULD BE LAMBDA P WEB " + lambdap_web);
     }
 
     //Sec F13 check
@@ -297,12 +298,9 @@ function phiMn_LTB(L, beam, getLs)
             MnLTB = MnLTB + " (elastic, Sec. F3)";
 		}
 
-    console.log("Lr is " + Lr);
     Lr = Math.round(Lr*10)/10;
-    console.log("Lr is " + Lr);
-    console.log("Lp is " + Lp);
     Lp = Math.round(Lp*10)/10;
-    console.log("Lp is " + Lp);
+
     if (getLs)
     {
         var lengths = {
@@ -331,8 +329,6 @@ function phiMn_FLB_2016(L, beam)
     else if (kc > 0.76)
         kc = 0.76
 
-    console.log("TEST 1 " + beam.lambdar_flange);
-    console.log("TEST 2 " + beam.bf2tf);
 
     if(beam.bf2tf > beam.lambdap_flange && beam.bf2tf < beam.lambdar_flange)
     {
@@ -612,6 +608,17 @@ function showTable(status, status_new, LS, IV, beam, limitExceeded)
     var hc_new = "N/A";
     var hcy = "N/A";
     var hcy_new = "N/A";
+    var htw_2016 = Math.round(beam.htw*100)/100;
+    var htw_new = Math.round(beam.htw_new*100)/100;
+    var lpFlange = Math.round(beam.lambdap_flange*100)/100;
+    var lrFlange = Math.round(beam.lambdar_flange*100)/100;
+    var lpFlangeNew = Math.round(beam.lambdap_flange_new*100)/100;
+    var lrFlangeNew = Math.round(beam.lambdar_flange_new*100)/100;
+    var lpWeb = Math.round(beam.lambdap_web*100)/100;
+    var lrWeb = Math.round(beam.lambdar_web*100)/100;
+    var lpWebNew = Math.round(beam.lambdap_web_new*100)/100;
+    var lrWebNew = Math.round(beam.lambdar_web_new*100)/100;
+
     if (beam.isBU)
     {
         hc = Math.round(beam.hc*10)/10;
@@ -652,6 +659,17 @@ function showTable(status, status_new, LS, IV, beam, limitExceeded)
     $('#Lp_new').html(IV.Lp_new);
     $('#Lr').html(IV.Lr);
     $('#Lr_new').html(IV.Lr_new);
+
+    $('#flange_lambda_p').html(lpFlange);
+    $('#flange_lambda_p_new').html(lpFlangeNew);
+    $('#flange_lambda_r').html(lrFlange);
+    $('#flange_lambda_r_new').html(lrFlangeNew);
+    $('#web_lambda_p').html(lpWeb);
+    $('#web_lambda_p_new').html(lpWebNew);
+    $('#web_lambda_r').html(lrWeb);
+    $('#web_lambda_r_new').html(lrWebNew);
+    $('#htw_2016').html(htw_2016);
+    $('#htw_new').html(htw_new);
 
     $('#My').html(My);
     $('#My_new').html(My_new);
@@ -729,6 +747,7 @@ function getBUprops(beam)
     }
 
     var hp = Math.abs(2*(PNA-beam.tf_comp));
+    console.log("hp is " + hp);
     var c_tens = beam.d - NAfromCompFlange;
     var Sxc = Ix/NAfromCompFlange;
     var Sxt = Ix/c_tens;
