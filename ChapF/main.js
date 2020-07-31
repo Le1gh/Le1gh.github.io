@@ -379,7 +379,7 @@ function phiMn_FLB_new(L, beam)
 
 function start() 
 {
-    var L=parseInt($('#flexL').val());
+    var L=parseFloat($('#flexL').val());
     var Fy=parseInt($('#Fy').val());
     var E = 29000;
     var beamSize= $('#beamSize').val();
