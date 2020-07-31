@@ -17,6 +17,11 @@ function phiMn_LTB_F4_new(L, beam, getLs)
     {
         var h = beam.d - beam.tf_comp - beam.tf_tens;
         var J = (1/3)*(beam.bf_comp*Math.pow(beam.tf_comp, 3) + beam.bf_tens*Math.pow(beam.tf_tens, 3) + h*Math.pow(beam.tw, 3));
+        console.log("IMPORTANT RATIO " + beam.Iyc/beam.Iy);
+        if (beam.Iyc/beam.Iy > 0.23 || beam.htw > 150)
+        {
+            J = 0;
+        }
         beam.J = J; 
         h0 = beam.d - 0.5*beam.tf_comp - 0.5*beam.tf_tens;   
     }
@@ -116,7 +121,7 @@ function getF4Vals_new(beam)
     console.log("Myc_dist " + beam.Myc_dist);
     var denom = 12*(1+beam.hc*beam.tw/(6*beam.bf_comp*beam.tf_comp));
     var rt = beam.bf_comp/Math.sqrt(denom);
-    console.log("F4 new, hc is " + beam.hc);
+    console.log("rt is " + rt);
     var Rpc = 1;
     var Sx = Math.min(beam.Sxt, beam.Sxc);
     var Mp = beam.Fy*Math.min(beam.Z, 1.6*Sx);
