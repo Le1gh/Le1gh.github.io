@@ -8,15 +8,11 @@
   <script type = "text/javascript" src="main.js"></script>
   <script type = "text/javascript" src="uniformStress.js"></script>
   <script type = "text/javascript" src="concentratedStress.js"></script>
+  <script type = "text/javascript" src="helpers.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src = "../jsFolder/jquery-3.1.1.js"></script>
 <script src = "../jsFolder/handlebars-v4.0.5.js"></script>
-  <!--<script type = "text/javascript"> 
-    //google.charts.load('current', {packages: ['corechart', 'line']});
-    //google.charts.setOnLoadCallback(drawLineStyles);
-    //google.charts.setOnLoadCallback(drawLineStyles2);
-  </script>
--->
+
 </head>
 
 
@@ -29,317 +25,319 @@
 <h2>
 Assume that braces are below beam and the compression brace is on the left.</h2>
 <h2>Story Data</h2>
-<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
-<tr>
-	<td width ="150">Beam Length (ft): </td>
-	<td><input class="form-control input-sm" id = "beamLength"></td>
-</tr>
-<tr>
-	<td width ="180">Left Column Centerline to Chevron Connection (ft): </td>
-	<td><input class="form-control input-sm" id = "a"></td>
-</tr>
-<tr>
-	<td width ="180">Story Height (ft): </td>
-	<td><input class="form-control input-sm" id = "storyHeight"></td>
-</tr>
-<tr>
-	<td width ="180">Maximum Factored Gravity Beam Shear outside connection (kips): </td>
-	<td><input class="form-control input-sm" id = "Vgrav"></td>
-</tr>
-<!--
-<tr>
-	<td width ="220">Beam End to Gusset Start (ft): </td>
-	<td><input class="form-control input-sm" placeholder = 12 id = "a"></td>
-</tr>
--->
-<tr>
-	<td width ="180">Beam Size</td>
-	<td><select id = "beamSize" class = "form-control input-sm">
-<option>W14X176</option>
-<option>W24X370</option>
-<option>W24X335</option>
-<option>W24X306</option>
-<option>W24X279</option>
-<option>W24X250</option>
-<option>W24X229</option>
-<option>W24X207</option>
-<option>W24X192</option>
-<option>W24X176</option>
-<option>W24X162</option>
-<option>W24X146</option>
-<option>W24X131</option>
-<option>W24X117</option>
-<option>W24X104</option>
-<option>W24X103</option>
-<option>W24X94</option>
-<option>W24X84</option>
-<option>W24X76</option>
-<option>W24X68</option>
-<option>W24X62</option>
-<option>W24X55</option>
-<option>W21X275</option>
-<option>W21X248</option>
-<option>W21X223</option>
-<option>W21X201</option>
-<option>W21X182</option>
-<option>W21X166</option>
-<option>W21X147</option>
-<option>W21X132</option>
-<option>W21X122</option>
-<option>W21X111</option>
-<option>W21X101</option>
-<option>W21X93</option>
-<option>W21X83</option>
-<option>W21X73</option>
-<option>W21X68</option>
-<option>W21X62</option>
-<option>W21X55</option>
-<option>W21X48</option>
-<option>W21X57</option>
-<option>W21X50</option>
-<option>W21X44</option>
-<option>W18X311</option>
-<option>W18X283</option>
-<option>W18X258</option>
-<option>W18X234</option>
-<option>W18X211</option>
-<option>W18X192</option>
-<option>W18X175</option>
-<option>W18X158</option>
-<option>W18X143</option>
-<option>W18X130</option>
-<option>W18X119</option>
-<option>W18X106</option>
-<option>W18X97</option>
-<option>W18X86</option>
-<option>W18X76</option>
-<option>W18X71</option>
-<option>W18X65</option>
-<option>W18X60</option>
-<option>W18X55</option>
-<option>W18X50</option>
-<option>W18X46</option>
-<option>W18X40</option>
-<option>W18X35</option>
-<option>W16X100</option>
-<option>W16X89</option>
-<option>W16X77</option>
-<option>W16X67</option>
-<option>W16X57</option>
-<option>W16X50</option>
-<option>W16X45</option>
-<option>W16X40</option>
-<option>W16X36</option>
-<option>W16X31</option>
-<option>W16X26</option>
-<option>W14X873</option>
-<option>W14X808</option>
-<option>W14X730</option>
-<option>W14X665</option>
-<option>W14X605</option>
-<option>W14X550</option>
-<option>W14X500</option>
-<option>W14X455</option>
-<option>W14X426</option>
-<option>W14X398</option>
-<option>W14X370</option>
-<option>W14X342</option>
-<option>W14X311</option>
-<option>W14X283</option>
-<option>W14X257</option>
-<option>W14X233</option>
-<option>W14X211</option>
-<option>W14X193</option>
+<form name="inputs">
+	<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
+	<tr>
+		<td width ="150">Beam Length (ft): </td>
+		<td><input required class="form-control input-sm" id = "beamLength"></td>
+	</tr>
+	<tr>
+		<td width ="180">Left Column Centerline to Chevron Connection (ft): </td>
+		<td><input class="form-control input-sm" id = "a"></td>
+	</tr>
+	<tr>
+		<td width ="180">Story Height (ft): </td>
+		<td><input class="form-control input-sm" id = "storyHeight"></td>
+	</tr>
+	<tr>
+		<td width ="180">Maximum Factored Gravity Beam Shear outside connection (kips): </td>
+		<td><input class="form-control input-sm" id = "Vgrav"></td>
+	</tr>
+	<!--
+	<tr>
+		<td width ="220">Beam End to Gusset Start (ft): </td>
+		<td><input class="form-control input-sm" placeholder = 12 id = "a"></td>
+	</tr>
+	-->
+	<tr>
+		<td width ="180">Beam Size</td>
+		<td><select id = "beamSize" class = "form-control input-sm">
+	<option>W14X176</option>
+	<option>W24X370</option>
+	<option>W24X335</option>
+	<option>W24X306</option>
+	<option>W24X279</option>
+	<option>W24X250</option>
+	<option>W24X229</option>
+	<option>W24X207</option>
+	<option>W24X192</option>
+	<option>W24X176</option>
+	<option>W24X162</option>
+	<option>W24X146</option>
+	<option>W24X131</option>
+	<option>W24X117</option>
+	<option>W24X104</option>
+	<option>W24X103</option>
+	<option>W24X94</option>
+	<option>W24X84</option>
+	<option>W24X76</option>
+	<option>W24X68</option>
+	<option>W24X62</option>
+	<option>W24X55</option>
+	<option>W21X275</option>
+	<option>W21X248</option>
+	<option>W21X223</option>
+	<option>W21X201</option>
+	<option>W21X182</option>
+	<option>W21X166</option>
+	<option>W21X147</option>
+	<option>W21X132</option>
+	<option>W21X122</option>
+	<option>W21X111</option>
+	<option>W21X101</option>
+	<option>W21X93</option>
+	<option>W21X83</option>
+	<option>W21X73</option>
+	<option>W21X68</option>
+	<option>W21X62</option>
+	<option>W21X55</option>
+	<option>W21X48</option>
+	<option>W21X57</option>
+	<option>W21X50</option>
+	<option>W21X44</option>
+	<option>W18X311</option>
+	<option>W18X283</option>
+	<option>W18X258</option>
+	<option>W18X234</option>
+	<option>W18X211</option>
+	<option>W18X192</option>
+	<option>W18X175</option>
+	<option>W18X158</option>
+	<option>W18X143</option>
+	<option>W18X130</option>
+	<option>W18X119</option>
+	<option>W18X106</option>
+	<option>W18X97</option>
+	<option>W18X86</option>
+	<option>W18X76</option>
+	<option>W18X71</option>
+	<option>W18X65</option>
+	<option>W18X60</option>
+	<option>W18X55</option>
+	<option>W18X50</option>
+	<option>W18X46</option>
+	<option>W18X40</option>
+	<option>W18X35</option>
+	<option>W16X100</option>
+	<option>W16X89</option>
+	<option>W16X77</option>
+	<option>W16X67</option>
+	<option>W16X57</option>
+	<option>W16X50</option>
+	<option>W16X45</option>
+	<option>W16X40</option>
+	<option>W16X36</option>
+	<option>W16X31</option>
+	<option>W16X26</option>
+	<option>W14X873</option>
+	<option>W14X808</option>
+	<option>W14X730</option>
+	<option>W14X665</option>
+	<option>W14X605</option>
+	<option>W14X550</option>
+	<option>W14X500</option>
+	<option>W14X455</option>
+	<option>W14X426</option>
+	<option>W14X398</option>
+	<option>W14X370</option>
+	<option>W14X342</option>
+	<option>W14X311</option>
+	<option>W14X283</option>
+	<option>W14X257</option>
+	<option>W14X233</option>
+	<option>W14X211</option>
+	<option>W14X193</option>
 
-<option>W14X159</option>
-<option>W14X145</option>
-<option>W14X132</option>
-<option>W14X120</option>
-<option>W14X109</option>
-<option>W14X99</option>
-<option>W14X90</option>
-<option>W14X82</option>
-<option>W14X74</option>
-<option>W14X68</option>
-<option>W14X61</option>
-<option>W14X53</option>
-<option>W14X48</option>
-<option>W14X43</option>
-<option>W14X38</option>
-<option>W14X34</option>
-<option>W14X30</option>
-<option>W14X26</option>
-<option>W14X22</option>
-<option>W12X336</option>
-<option>W12X305</option>
-<option>W12X279</option>
-<option>W12X252</option>
-<option>W12X230</option>
-<option>W12X210</option>
-<option>W12X190</option>
-<option>W12X170</option>
-<option>W12X152</option>
-<option>W12X136</option>
-<option>W12X120</option>
-<option>W12X106</option>
-<option>W12X96</option>
-<option>W12X87</option>
-<option>W12X79</option>
-<option>W12X72</option>
-<option>W12X65</option>
-<option>W12X58</option>
-<option>W12X53</option>
-<option>W12X50</option>
-<option>W12X45</option>
-<option>W12X40</option>
-<option>W12X35</option>
-<option>W12X30</option>
-<option>W12X26</option>
-<option>W12X22</option>
-<option>W12X19</option>
-<option>W12X16</option>
-<option>W12X14</option>
-<option>W36X925</option>
-<option>W36X853</option>
-<option>W36X802</option>
-<option>W36X723</option>
-<option>W36X652</option>
-<option>W36X529</option>
-<option>W36X487</option>
-<option>W36X441</option>
-<option>W36X395</option>
-<option>W36X361</option>
-<option>W36X330</option>
-<option>W36X302</option>
-<option>W36X282</option>
-<option>W36X262</option>
-<option>W36X247</option>
-<option>W36X231</option>
-<option>W36X256</option>
-<option>W36X232</option>
-<option>W36X210</option>
-<option>W36X194</option>
-<option>W36X182</option>
-<option>W36X170</option>
-<option>W36X160</option>
-<option>W36X150</option>
-<option>W36X135</option>
-<option>W33X387</option>
-<option>W33X354</option>
-<option>W33X318</option>
-<option>W33X291</option>
-<option>W33X263</option>
-<option>W33X241</option>
-<option>W33X221</option>
-<option>W33X201</option>
-<option>W33X169</option>
-<option>W33X152</option>
-<option>W33X141</option>
-<option>W33X130</option>
-<option>W33X118</option>
-<option>W30X391</option>
-<option>W30X357</option>
-<option>W30X326</option>
-<option>W30X292</option>
-<option>W30X261</option>
-<option>W30X235</option>
-<option>W30X211</option>
-<option>W30X191</option>
-<option>W30X173</option>
-<option>W30X148</option>
-<option>W30X132</option>
-<option>W30X124</option>
-<option>W30X116</option>
-<option>W30X108</option>
-<option>W30X99</option>
-<option>W30X90</option>
-<option>W27X539</option>
-<option>W27X368</option>
-<option>W27X336</option>
-<option>W27X307</option>
-<option>W27X281</option>
-<option>W27X258</option>
-<option>W27X235</option>
-<option>W27X217</option>
-<option>W27X194</option>
-<option>W27X178</option>
-<option>W27X161</option>
-<option>W27X146</option>
-<option>W27X129</option>
-<option>W27X114</option>
-<option>W27X102</option>
-<option>W27X94</option>
-<option>W27X84</option>
-	</select>
-	</td>
-</tr>
-</table>
+	<option>W14X159</option>
+	<option>W14X145</option>
+	<option>W14X132</option>
+	<option>W14X120</option>
+	<option>W14X109</option>
+	<option>W14X99</option>
+	<option>W14X90</option>
+	<option>W14X82</option>
+	<option>W14X74</option>
+	<option>W14X68</option>
+	<option>W14X61</option>
+	<option>W14X53</option>
+	<option>W14X48</option>
+	<option>W14X43</option>
+	<option>W14X38</option>
+	<option>W14X34</option>
+	<option>W14X30</option>
+	<option>W14X26</option>
+	<option>W14X22</option>
+	<option>W12X336</option>
+	<option>W12X305</option>
+	<option>W12X279</option>
+	<option>W12X252</option>
+	<option>W12X230</option>
+	<option>W12X210</option>
+	<option>W12X190</option>
+	<option>W12X170</option>
+	<option>W12X152</option>
+	<option>W12X136</option>
+	<option>W12X120</option>
+	<option>W12X106</option>
+	<option>W12X96</option>
+	<option>W12X87</option>
+	<option>W12X79</option>
+	<option>W12X72</option>
+	<option>W12X65</option>
+	<option>W12X58</option>
+	<option>W12X53</option>
+	<option>W12X50</option>
+	<option>W12X45</option>
+	<option>W12X40</option>
+	<option>W12X35</option>
+	<option>W12X30</option>
+	<option>W12X26</option>
+	<option>W12X22</option>
+	<option>W12X19</option>
+	<option>W12X16</option>
+	<option>W12X14</option>
+	<option>W36X925</option>
+	<option>W36X853</option>
+	<option>W36X802</option>
+	<option>W36X723</option>
+	<option>W36X652</option>
+	<option>W36X529</option>
+	<option>W36X487</option>
+	<option>W36X441</option>
+	<option>W36X395</option>
+	<option>W36X361</option>
+	<option>W36X330</option>
+	<option>W36X302</option>
+	<option>W36X282</option>
+	<option>W36X262</option>
+	<option>W36X247</option>
+	<option>W36X231</option>
+	<option>W36X256</option>
+	<option>W36X232</option>
+	<option>W36X210</option>
+	<option>W36X194</option>
+	<option>W36X182</option>
+	<option>W36X170</option>
+	<option>W36X160</option>
+	<option>W36X150</option>
+	<option>W36X135</option>
+	<option>W33X387</option>
+	<option>W33X354</option>
+	<option>W33X318</option>
+	<option>W33X291</option>
+	<option>W33X263</option>
+	<option>W33X241</option>
+	<option>W33X221</option>
+	<option>W33X201</option>
+	<option>W33X169</option>
+	<option>W33X152</option>
+	<option>W33X141</option>
+	<option>W33X130</option>
+	<option>W33X118</option>
+	<option>W30X391</option>
+	<option>W30X357</option>
+	<option>W30X326</option>
+	<option>W30X292</option>
+	<option>W30X261</option>
+	<option>W30X235</option>
+	<option>W30X211</option>
+	<option>W30X191</option>
+	<option>W30X173</option>
+	<option>W30X148</option>
+	<option>W30X132</option>
+	<option>W30X124</option>
+	<option>W30X116</option>
+	<option>W30X108</option>
+	<option>W30X99</option>
+	<option>W30X90</option>
+	<option>W27X539</option>
+	<option>W27X368</option>
+	<option>W27X336</option>
+	<option>W27X307</option>
+	<option>W27X281</option>
+	<option>W27X258</option>
+	<option>W27X235</option>
+	<option>W27X217</option>
+	<option>W27X194</option>
+	<option>W27X178</option>
+	<option>W27X161</option>
+	<option>W27X146</option>
+	<option>W27X129</option>
+	<option>W27X114</option>
+	<option>W27X102</option>
+	<option>W27X94</option>
+	<option>W27X84</option>
+		</select>
+		</td>
+	</tr>
+	</table>
 
 
-<h2>Braces and Gusset</h2>
-<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
-<tr>
-	<td width ="180">Gusset Length (in.):</td>
-	<td><input required class="form-control input-sm" id = "gussetLength1" ></td>
-</tr>
-<tr>
-	<td width ="180">Gusset height (in.):</td>
-	<td><input class="form-control input-sm" id = "gussetHeight1"></td>
-</tr>
-<tr>
-	<td width ="180">Gusset thickness (in.):</td>
-	<td><input class="form-control input-sm" id = "gussetThickness1"> </td>
-</tr>
-<tr>
-  <td width ="180">Force in Tension Brace (kips):</td>
-  <td><input class="form-control input-sm" id = "tensionForce1"></td>
-</tr>
-<tr>
-  <td width ="180">Force in Compression Brace (kips):</td>
-  <td><input class="form-control input-sm" id = "compressionForce1"></td>
-</tr>
-</table>
-<!--
-<h2>Brace and Gusset - Side 2</h2>
-<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
-<tr>
-  <td width ="180">Gusset 2 Length (in.):</td>
-  <td><input required class="form-control input-sm" id = "gussetLength2" ></td>
-</tr>
-<tr>
-  <td width ="180">Gusset 2 height (in.):</td>
-  <td><input class="form-control input-sm" id = "gussetHeight2"></td>
-</tr>
-<tr>
-  <td width ="180">Gusset 2 thickness (in.):</td>
-  <td><input class="form-control input-sm" id = "gussetThickness2"> </td>
-</tr>
-<tr>
-  <td width ="180">Force in Tension Brace (kips):</td>
-  <td><input class="form-control input-sm" id = "tensionForce2"></td>
-</tr>
-<tr>
-  <td width ="180">Force in Compression Brace (kips):</td>
-  <td><input class="form-control input-sm" id = "compressionForce2"></td>
-</tr>
-</table>
--->
-<h2>Stress Distrubtion</h2>
-<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
-<tr>
-	<td width ="180">Assumed Stress Distrubtion</td>
-	<td >
-		<form>
-			<select id = "stressModel" class = "form-control input-sm">
-				<option value = "uniformStressModel">Uniform Stress Model</option>
-				<option value = "concentratedForceModel">Concentrated Force Model</option>
-			</select>
-		</form>
-	</td>
-</tr>
-</table>
+	<h2>Braces and Gusset</h2>
+	<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
+	<tr>
+		<td width ="180">Gusset Length (in.):</td>
+		<td><input required class="form-control input-sm" id = "gussetLength1" ></td>
+	</tr>
+	<tr>
+		<td width ="180">Gusset height (in.):</td>
+		<td><input class="form-control input-sm" id = "gussetHeight1"></td>
+	</tr>
+	<tr>
+		<td width ="180">Gusset thickness (in.):</td>
+		<td><input class="form-control input-sm" id = "gussetThickness1"> </td>
+	</tr>
+	<tr>
+	  <td width ="180">Force in Tension Brace (kips):</td>
+	  <td><input class="form-control input-sm" id = "tensionForce1"></td>
+	</tr>
+	<tr>
+	  <td width ="180">Force in Compression Brace (kips):</td>
+	  <td><input class="form-control input-sm" id = "compressionForce1"></td>
+	</tr>
+	</table>
+	<!--
+	<h2>Brace and Gusset - Side 2</h2>
+	<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
+	<tr>
+	  <td width ="180">Gusset 2 Length (in.):</td>
+	  <td><input required class="form-control input-sm" id = "gussetLength2" ></td>
+	</tr>
+	<tr>
+	  <td width ="180">Gusset 2 height (in.):</td>
+	  <td><input class="form-control input-sm" id = "gussetHeight2"></td>
+	</tr>
+	<tr>
+	  <td width ="180">Gusset 2 thickness (in.):</td>
+	  <td><input class="form-control input-sm" id = "gussetThickness2"> </td>
+	</tr>
+	<tr>
+	  <td width ="180">Force in Tension Brace (kips):</td>
+	  <td><input class="form-control input-sm" id = "tensionForce2"></td>
+	</tr>
+	<tr>
+	  <td width ="180">Force in Compression Brace (kips):</td>
+	  <td><input class="form-control input-sm" id = "compressionForce2"></td>
+	</tr>
+	</table>
+	-->
+	<h2>Stress Distrubtion</h2>
+	<table id = "inputTable" class = "table table-hover table-bordered table-condensed table-striped vertical-align">
+	<tr>
+		<td width ="180">Assumed Stress Distrubtion</td>
+		<td >
+			<form>
+				<select id = "stressModel" class = "form-control input-sm">
+					<option value = "uniformStressModel">Uniform Stress Model</option>
+					<option value = "concentratedForceModel">Concentrated Force Model</option>
+				</select>
+			</form>
+		</td>
+	</tr>
+	</table>
+</form>
 
-<button class = "btn" id="theButton">Calculate Chevron Effect</button>
+<button class = "btn" type = "button" id="button">Submit</button>
 </div>
 
 <div class = "col-md-6">

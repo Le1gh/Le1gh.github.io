@@ -18,8 +18,8 @@ function uniformStress(braces, gusset, beam)
   let z = N1/gusset.length;
 
   //CALCULATE MAX SHEAR AND MOMENT
-   let Vmax = Math.round(2*moment/gusset.length);
-   let Mmax = Math.round(Math.abs(moment/8) + Math.abs(N1*beam.length*12/4));
+  let Vmax = Math.round(2*moment/gusset.length);
+  let Mmax = Math.round(Math.abs(moment/8) + Math.abs(N1*beam.length*12/4));
 
   let c = document.getElementById('myCanvas');
   let ctx = c.getContext("2d");
