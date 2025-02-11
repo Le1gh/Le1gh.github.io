@@ -39,7 +39,9 @@ var FBLimitState = phiPn_FlexuralBuckling(Lcx, Lcy, column.A, column.rx, column.
 var TBLimitState = phiPn_TorsionalBuckling(column.A, column.Ix, column.Iy, column.Cw, Lcz, column.J);
 var LBLimitState = phiPn_LocalBuckling(Lcx, Lcy, column.A, column.bf2tf, column.htw, column.tw, column.rx, column.ry, column.bf, column.d, column.tf);
 var CAFTBLimitState = phiPn_CAFTB(column.A, column.Cw, column.Iy, column.d, column.rx, column.ry, column.J, Lcz);
+var bracing = calcBracing(column.A);
 displayTable(FBLimitState, TBLimitState, LBLimitState, CAFTBLimitState);
+displayBracing(bracing);
 }
 
     
@@ -158,6 +160,12 @@ function phiPn_CAFTB(A, Cw, Iy, d, rx, ry, J, Lcz) {
 
 }
 
+function calcBracing(A) {
+	var temp_num = A*2;
+    return temp_num;
+
+}
+
 
 function displayTable(FB, TB, LB, CAFTB) {
     //$('#checks').empty();
@@ -173,6 +181,20 @@ function displayTable(FB, TB, LB, CAFTB) {
     $('#checks').html(newTable);
     $('#theButton').hide();
     $('#startAgainBtn').show();
+
+};
+
+function displayBracing(FB, TB, LB, CAFTB) {
+    //$('#checks').empty();
+    var source = $("#bracingVals").html();
+    var template = Handlebars.compile(source);
+    var data = {
+    	showBracing: FB
+         };
+    var newTable = template(data);
+    $('#bracing').html(newTable);
+    //$('#theButton').hide();
+    //$('#startAgainBtn').show();
 
 };
     
