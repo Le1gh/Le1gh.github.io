@@ -28,6 +28,7 @@
 <tr>
 	<td>W-shape</td>
 	<td><select id = "colSize" class = "form-control input-sm">
+<option>W18X50</option>
 <option>W36X925</option>
 <option>W36X853</option>
 <option>W36X802</option>
@@ -160,7 +161,6 @@
 <option>W18X65</option>
 <option>W18X60</option>
 <option>W18X55</option>
-<option>W18X50</option>
 <option>W18X46</option>
 <option>W18X40</option>
 <option>W18X35</option>
@@ -257,6 +257,18 @@
 	<td>Effective length for torsional buckling about longitudinal axis, <i>L<sub>cz</sub></i> (ft):</td>
 	<td><input class="form-control input-sm" id = "colKLz"  placeholder=14 value=14></td>
 </tr>
+<tr>
+	<td>Required Axial Strength of Column (LRFD) <i>P<sub>u</sub></i> (kips):</td>
+	<td><input class="form-control input-sm" id = "Pu"  placeholder=300 value=300></td>
+</tr>
+<tr>
+	<td>Bracing offset distance from shear center along y-axis, <i>y<sub>a</sub></i> (in):</td>
+	<td><input class="form-control input-sm" id = "xa" placeholder=0 value=0></td>
+</tr>
+<!--<tr>
+	<td>Bracing offset distance from shear center along y-axis, <i>y<sub>a</sub></i> (in):</td>
+	<td><input class="form-control input-sm" id = "ya" placeholder=0 value=0></td>
+</tr>-->
 </table>
 <button class = "btn" id="theButton">Calculate Strengths</button>
 </div>
@@ -290,7 +302,7 @@
       <h2>Required Column Bracing (lrfd)</h2>
       <table class = "table table-hover table-bordered table-condensed table-striped testTable">
         <tr style ="height: 40px;">
-        	<td>Bracing Stiffness</td>
+        	<td>Req'd Column Torsional Point Bracing, &beta;<sub>T</sub></td>
         	<td>{{showBracing}}</td>
         </tr>
      </table>

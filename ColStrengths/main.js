@@ -13,6 +13,9 @@ function getStrengths() {
     var Lcx = parseFloat($('#colKLx').val());
     var Lcy = parseFloat($('#colKLy').val());
     var Lcz = parseFloat($('#colKLz').val());
+	var xa = parseFloat($('#xa').val());
+	//var ya = parseFloat($('#ya').val());
+	var Pu = parseFloat($('#Pu').val());
     var colSize = $('#colSize').val();
  
     for (var i = 0; i < Wshapes.length; i++) {
@@ -38,8 +41,8 @@ function getStrengths() {
 var FBLimitState = phiPn_FlexuralBuckling(Lcx, Lcy, column.A, column.rx, column.ry,);
 var TBLimitState = phiPn_TorsionalBuckling(column.A, column.Ix, column.Iy, column.Cw, Lcz, column.J);
 var LBLimitState = phiPn_LocalBuckling(Lcx, Lcy, column.A, column.bf2tf, column.htw, column.tw, column.rx, column.ry, column.bf, column.d, column.tf);
-var CAFTBLimitState = phiPn_CAFTB(column.A, column.Cw, column.Iy, column.d, column.rx, column.ry, column.J, Lcz);
-var bracing = calcBracing(column.A);
+var CAFTBLimitState = phiPn_CAFTB(column, Lcz, xa);
+var bracing = calcTorsionalBracingStiffness(column, Pu, xa, Lcz, FBLimitState, LBLimitState, TBLimitState);
 displayTable(FBLimitState, TBLimitState, LBLimitState, CAFTBLimitState);
 displayBracing(bracing);
 }
@@ -144,6 +147,23 @@ function phiPn_TorsionalBuckling(A, Ix, Iy, Cw, Lcz, J) {
     return phiPnTB;
 }
 
+function phiPn_CAFTB(column, Lcz, xa) {
+	var h0 = column.d - column.tf;
+	var ro_squared = Math.pow(column.rx, 2) + Math.pow(column.ry, 2) + Math.pow(xa, 2);
+	var first_term = Math.pow(Math.PI, 2) * 29000*(column.Iy) / Math.pow(Lcz*12, 2);
+	var inner_term = 0.25*Math.pow(h0, 2) + Math.pow(xa, 2);
+	var Fe = (1/(column.A * ro_squared)) * (first_term * inner_term + 11200 * column.J);
+	var Fcr;
+    if (Fy/Fe < 2.25) {
+        Fcr = Fy * Math.pow(0.658, (Fy/Fe))
+    }
+    else {
+        Fcr = 0.877 * Fe;
+    }
+    var phiPnCAFTB = parseInt(0.9*Fcr*column.A);
+    return phiPnCAFTB;
+}
+/*
 function phiPn_CAFTB(A, Cw, Iy, d, rx, ry, J, Lcz) {
 	var temp_num = Cw+Iy*Math.pow(0.5*d, 2);
 	var temp_denom = A*(Math.pow(rx, 2)+Math.pow(ry, 2)+Math.pow(0.5*d, 2));
@@ -157,12 +177,28 @@ function phiPn_CAFTB(A, Cw, Iy, d, rx, ry, J, Lcz) {
     }
     var phiPnCAFTB = parseInt(0.9*Fcr*A);
     return phiPnCAFTB;
-
 }
+*/
 
-function calcBracing(A) {
-	var temp_num = A*2;
-    return temp_num;
+function calcTorsionalBracingStiffness(column, Pu, ya, Lcz, Pn_FB, Pn_LB, Pn_TB) 
+{
+	var h0 = column.d - column.tf;
+	var E = 29000;
+	var Aa = Math.max(2, (4 - 2*ya) / h0);
+	var ro_squared = Math.pow(column.rx, 2) + Math.pow(column.ry, 2) + Math.pow(ya, 2);
+	
+	var n = 1;
+	var taub = 1;
+	var Po = Math.min(Pn_FB, Pn_TB);
+	if (Pn_LB)
+		Po = Math.min(Po, Pn_TB);
+	var num_second_term = 0.25*Math.pow(h0, 2) + Math.pow(ya, 2);
+	var numerator = Aa*Math.pow(Pu*ro_squared - Po * num_second_term, 2);
+	var denominator = 4*n*taub*E*column.Iy/(12*Lcz) * (0.25*Math.pow(h0, 2) + Math.pow(ya, 2));
+	console.log(numerator);
+	console.log(denominator);
+	var beta = numerator / denominator;
+    return parseInt(beta);
 
 }
 
