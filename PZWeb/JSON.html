@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to JSON Converter</title>
+	 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+	 
+</head>
+<body>
+
+    <h1>CSV to JSON Converter</h1>
+
+    <!-- File Upload Form -->
+   <div class="upload-section">
+            <input type="file" id="csvFile" accept=".csv">
+            <button class="btn" onclick="convertCSVtoJSON()">Convert CSV to JSON</button>
+        </div>
+
+
+    <pre id="output"></pre>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script src = "jsFolder/handlebars-v4.0.5.js"></script>
+<script src = "jsFolder/jquery-3.1.1.js"></script>
+<script src = "JSON_main.js"></script>
+
+</body>
+</html>

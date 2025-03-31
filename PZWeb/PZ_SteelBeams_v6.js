@@ -8497,7 +8497,7 @@ const jsonData30 =
       "Theta_pl_pz": 0.94
    }
 };
-/*
+const jsonData31 =
  {
    "ID": 31,
    "Experimental Program": "Schneider and Teeraparbwong (2000)",
@@ -8779,7 +8779,8 @@ const jsonData30 =
       "Theta_pl_beam": "4.00",
       "Theta_pl_pz": 1.18
    }
-},
+};
+const jsonData32 = 
  {
    "ID": 32,
    "Experimental Program": "Schneider and Teeraparbwong (2000)",
@@ -9061,7 +9062,8 @@ const jsonData30 =
       "Theta_pl_beam": "3.40",
       "Theta_pl_pz": 1.21
    }
-},
+};
+const jsonData33 = 
  {
    "ID": 33,
    "Experimental Program": "Schneider and Teeraparbwong (2000)",
@@ -9343,7 +9345,8 @@ const jsonData30 =
       "Theta_pl_beam": "2.20",
       "Theta_pl_pz": 2.3
    }
-},
+};
+const jsonData34 = 
  {
    "ID": 34,
    "Experimental Program": "Shin (2017)",
@@ -9625,7 +9628,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.40",
       "Theta_pl_pz": 1.9
    }
-},
+};
+const jsonData35 = 
  {
    "ID": 35,
    "Experimental Program": "Shin (2017)",
@@ -9907,7 +9911,8 @@ const jsonData30 =
       "Theta_pl_beam": "4.00",
       "Theta_pl_pz": 0.1
    }
-},
+};
+const jsonData36 = 
  {
    "ID": 36,
    "Experimental Program": "Shin (2017)",
@@ -10189,7 +10194,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.10",
       "Theta_pl_pz": 3.9
    }
-},
+};
+const jsonData37 = 
  {
    "ID": 37,
    "Experimental Program": "Shin (2017)",
@@ -10471,7 +10477,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.40",
       "Theta_pl_pz": 0.9
    }
-},
+};
+const jsonData38 = 
  {
    "ID": 38,
    "Experimental Program": "Shin (2017)",
@@ -10753,7 +10760,8 @@ const jsonData30 =
       "Theta_pl_beam": "2.10",
       "Theta_pl_pz": 3.3
    }
-},
+};
+const jsonData39 = 
  {
    "ID": 39,
    "Experimental Program": "Shin (2017)",
@@ -11035,7 +11043,8 @@ const jsonData30 =
       "Theta_pl_beam": "1.00",
       "Theta_pl_pz": 1.9
    }
-},
+};
+const jsonData40 = 
  {
    "ID": 40,
    "Experimental Program": "Shin (2017)",
@@ -11317,7 +11326,8 @@ const jsonData30 =
       "Theta_pl_beam": "1.00",
       "Theta_pl_pz": 1.2
    }
-},
+};
+const jsonData41 = 
  {
    "ID": 41,
    "Experimental Program": "Shin (2017)",
@@ -11599,7 +11609,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.40",
       "Theta_pl_pz": 1.5
    }
-},
+};
+const jsonData42 = 
  {
    "ID": 42,
    "Experimental Program": "Stojadinovic et al. (2000)",
@@ -11881,7 +11892,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.32",
       "Theta_pl_pz": 1.51
    }
-},
+};
+const jsonData43 = 
  {
    "ID": 43,
    "Experimental Program": "Stojadinovic et al. (2000)",
@@ -12163,7 +12175,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.81",
       "Theta_pl_pz": 1.38
    }
-},
+};
+const jsonData44 = 
  {
    "ID": 44,
    "Experimental Program": "Stojadinovic et al. (2000)",
@@ -12445,7 +12458,8 @@ const jsonData30 =
       "Theta_pl_beam": "1.33",
       "Theta_pl_pz": 1.36
    }
-},
+};
+const jsonData45 = 
  {
    "ID": 45,
    "Experimental Program": "Tsai and Chen (2000)",
@@ -12727,7 +12741,8 @@ const jsonData30 =
       "Theta_pl_beam": "3.03",
       "Theta_pl_pz": 0.97
    }
-},
+};
+const jsonData46 = 
  {
    "ID": 46,
    "Experimental Program": "Tsai and Chen (2000)",
@@ -13009,7 +13024,8 @@ const jsonData30 =
       "Theta_pl_beam": "3.43",
       "Theta_pl_pz": 0.57
    }
-},
+};
+const jsonData47 = 
  {
    "ID": 47,
    "Experimental Program": "Tsai and Chen (2000)",
@@ -13291,7 +13307,8 @@ const jsonData30 =
       "Theta_pl_beam": "2.90",
       "Theta_pl_pz": 1.1
    }
-},
+};
+const jsonData48 = 
  {
    "ID": 48,
    "Experimental Program": "FEMA (1997)",
@@ -13573,7 +13590,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.5",
       "Theta_pl_pz": 0.47
    }
-},
+};
+const jsonData49 = 
  {
    "ID": 49,
    "Experimental Program": "FEMA (1997)",
@@ -13855,7 +13873,8 @@ const jsonData30 =
       "Theta_pl_beam": "0.4",
       "Theta_pl_pz": 0.49
    }
-},
+};
+const jsonData50 = 
  {
    "ID": 50,
    "Experimental Program": "FEMA (1997)",
@@ -14137,7 +14156,8 @@ const jsonData30 =
       "Theta_pl_beam": "1.0",
       "Theta_pl_pz": 0.95
    }
-},
+};
+const jsonData51 = 
  {
    "ID": 51,
    "Experimental Program": "FEMA (1997)",
@@ -14419,7 +14439,8 @@ const jsonData30 =
       "Theta_pl_beam": "NR",
       "Theta_pl_pz": 0.41
    }
-},
+};
+const jsonData52 = 
  {
    "ID": 52,
    "Experimental Program": "FEMA (1997)",
@@ -14701,7 +14722,8 @@ const jsonData30 =
       "Theta_pl_beam": "NR",
       "Theta_pl_pz": 0.65
    }
-},
+};
+const jsonData53 = 
  {
    "ID": 53,
    "Experimental Program": "FEMA (1997)",
@@ -14983,7 +15005,8 @@ const jsonData30 =
       "Theta_pl_beam": "NR",
       "Theta_pl_pz": 0.81
    }
-},
+};
+const jsonData54 = 
  {
    "ID": 54,
    "Experimental Program": "FEMA (1997)",
@@ -15265,7 +15288,8 @@ const jsonData30 =
       "Theta_pl_beam": "NR",
       "Theta_pl_pz": 0.64
    }
-},
+};
+const jsonData55 = 
  {
    "ID": 55,
    "Experimental Program": "FEMA (1997)",
@@ -15547,7 +15571,8 @@ const jsonData30 =
       "Theta_pl_beam": "NR",
       "Theta_pl_pz": 0.28
    }
-},
+};
+/*
  {
    "ID": 56,
    "Experimental Program": "FEMA (1997)",
